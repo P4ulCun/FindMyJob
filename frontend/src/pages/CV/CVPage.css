@@ -1,0 +1,219 @@
+.cv-page {
+  max-width: 640px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+}
+
+.cv-page h1 {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+}
+
+/* ---------- Upload card ---------- */
+.upload-card {
+  border: 2px dashed #d0d5dd;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  background: #fafafa;
+  transition: border-color 0.2s;
+}
+
+.upload-card.drag-over {
+  border-color: #646cff;
+  background: #f0f0ff;
+}
+
+.upload-card p {
+  margin: 0.5rem 0 0;
+  color: #667085;
+  font-size: 0.85rem;
+}
+
+.file-input-label {
+  display: inline-block;
+  padding: 0.6rem 1.4rem;
+  background: #646cff;
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.file-input-label:hover {
+  background: #535bf2;
+}
+
+.file-input-label input {
+  display: none;
+}
+
+/* ---------- Selected file info ---------- */
+.selected-file {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: #344054;
+  font-size: 0.9rem;
+}
+
+.selected-file .file-name {
+  font-weight: 600;
+}
+
+.selected-file .file-size {
+  color: #667085;
+}
+
+/* ---------- Error ---------- */
+.error-banner {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  background: #fef3f2;
+  border: 1px solid #fda29b;
+  border-radius: 8px;
+  color: #b42318;
+  font-size: 0.875rem;
+}
+
+/* ---------- Success ---------- */
+.success-banner {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  background: #ecfdf3;
+  border: 1px solid #6ce9a6;
+  border-radius: 8px;
+  color: #027a48;
+  font-size: 0.875rem;
+}
+
+/* ---------- Action buttons ---------- */
+.upload-btn,
+.save-btn,
+.reupload-btn {
+  margin-top: 1.25rem;
+  width: 100%;
+  padding: 0.7rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.upload-btn {
+  background: #646cff;
+}
+
+.upload-btn:hover:not(:disabled) {
+  background: #535bf2;
+}
+
+.save-btn {
+  background: #12b76a;
+}
+
+.save-btn:hover:not(:disabled) {
+  background: #039855;
+}
+
+.reupload-btn {
+  background: #667085;
+}
+
+.reupload-btn:hover {
+  background: #475467;
+}
+
+.upload-btn:disabled,
+.save-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-row {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.btn-row .save-btn,
+.btn-row .reupload-btn {
+  flex: 1;
+}
+
+/* ---------- Preview ---------- */
+.preview-section {
+  margin-top: 2rem;
+}
+
+.preview-section h2 {
+  font-size: 1.35rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #646cff;
+  padding-bottom: 0.4rem;
+}
+
+.preview-block {
+  margin-bottom: 1.25rem;
+}
+
+.preview-block h3 {
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #667085;
+  margin-bottom: 0.4rem;
+}
+
+.preview-block .value {
+  background: #f9fafb;
+  border: 1px solid #e4e7ec;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: #1d2939;
+  white-space: pre-wrap;
+}
+
+/* ---------- Editable field ---------- */
+.editable-field {
+  position: relative;
+}
+
+.editable-field .edit-hint {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.6rem;
+  font-size: 0.7rem;
+  color: #98a2b3;
+  pointer-events: none;
+}
+
+.editable-input {
+  width: 100%;
+  min-height: 2.6rem;
+  background: #fff;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+  font-family: inherit;
+  line-height: 1.55;
+  color: #1d2939;
+  resize: vertical;
+  transition: border-color 0.15s;
+  box-sizing: border-box;
+}
+
+.editable-input:focus {
+  outline: none;
+  border-color: #646cff;
+  box-shadow: 0 0 0 3px rgba(100, 108, 255, 0.15);
+}
