@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     # Local
     'users',
     'cv',
+    'preferences',
 ]
 
 MIDDLEWARE = [
