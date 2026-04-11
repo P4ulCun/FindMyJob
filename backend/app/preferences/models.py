@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
 
 
@@ -34,6 +35,26 @@ class JobPreference(models.Model):
         blank=True,
         default='',
     )
+
+    # Job sources
+    source_adzuna = models.BooleanField(default=True)
+    source_remoteok = models.BooleanField(default=True)
+    source_arbeitnow = models.BooleanField(default=True)
+    source_hn = models.BooleanField(default=True)
+
+    SOURCE_FIELDS = [
+        'source_adzuna',
+        'source_remoteok',
+        'source_arbeitnow',
+        'source_hn',
+    ]
+
+    def clean(self):
+        super().clean()
+        if not any(getattr(self, f) for f in self.SOURCE_FIELDS):
+            raise ValidationError(
+                'At least one job source must be enabled.'
+            )
 
     class Meta:
         db_table = 'job_preferences'
