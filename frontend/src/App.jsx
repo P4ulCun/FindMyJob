@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
 import CVPage from './pages/CV/CVPage'
+import PreferencesPage from './pages/Preferences/PreferencesPage'
 import './App.css'
 
 function Home() {
@@ -19,10 +20,12 @@ function App() {
       <nav className="main-nav">
         <Link to="/">Home</Link>
         <Link to="/cv">Upload CV</Link>
+        <Link to="/preferences">Preferences</Link>
       </nav>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/cv" element={<CVPage />} />
+        <Route path="/preferences" element={<PreferencesPage />} />
       </Routes>
     </BrowserRouter>
   )
