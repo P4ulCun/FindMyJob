@@ -1,38 +1,24 @@
-.app {
-  padding: 2rem;
+/* ---------- Page shell ---------- */
+.page-shell {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+}
+
+/* ---------- Home ---------- */
+.home-page {
   text-align: center;
+  padding: 4rem 1rem;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+.home-page h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #1d2939;
 }
 
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
-/* ---------- Nav ---------- */
-.main-nav {
-  display: flex;
-  gap: 1.5rem;
-  padding: 0.75rem 1.5rem;
-  background: #1a1a2e;
-  border-bottom: 1px solid #2a2a4a;
-}
-
-.main-nav a {
-  color: #c4c4e0;
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 0.95rem;
-  transition: color 0.2s;
-}
-
-.main-nav a:hover {
-  color: #646cff;
+.home-subtitle {
+  font-size: 1.05rem;
+  color: #667085;
 }

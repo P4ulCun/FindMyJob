@@ -1,12 +1,8 @@
 import { useState, useEffect } from 'react';
+import { authHeaders } from '../../utils/api';
 import './PreferencesPage.css';
 
 const API_PREFERENCES = '/api/preferences/';
-
-function authHeaders(extra = {}) {
-  const token = localStorage.getItem('access_token');
-  return token ? { Authorization: `Bearer ${token}`, ...extra } : { ...extra };
-}
 
 const WORK_TYPES = [
   { value: 'remote', label: 'Remote' },
