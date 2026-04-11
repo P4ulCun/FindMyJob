@@ -1,5 +1,6 @@
 .app {
   padding: 2rem;
+  text-align: center;
 }
 
 h1 {
@@ -11,28 +12,27 @@ h1 {
   padding: 2em;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  color: #fff;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-
-button:hover {
-  border-color: #646cff;
-}
-
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
 .read-the-docs {
   color: #888;
+}
+
+/* ---------- Nav ---------- */
+.main-nav {
+  display: flex;
+  gap: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  background: #1a1a2e;
+  border-bottom: 1px solid #2a2a4a;
+}
+
+.main-nav a {
+  color: #c4c4e0;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: color 0.2s;
+}
+
+.main-nav a:hover {
+  color: #646cff;
 }

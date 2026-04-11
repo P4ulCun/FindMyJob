@@ -4,3 +4,4 @@ django-cors-headers>=4.3
 
 djangorestframework
 djangorestframework-simplejwt
+pdfplumber
