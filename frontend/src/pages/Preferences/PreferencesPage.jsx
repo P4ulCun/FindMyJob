@@ -20,11 +20,22 @@ const SENIORITY_LEVELS = [
   { value: 'senior', label: 'Senior' },
 ];
 
+const SOURCES = [
+  { key: 'source_adzuna', label: 'Adzuna' },
+  { key: 'source_remoteok', label: 'RemoteOK' },
+  { key: 'source_arbeitnow', label: 'Arbeitnow' },
+  { key: 'source_hn', label: "HN Who's Hiring" },
+];
+
 const INITIAL = {
   job_title: '',
   location: '',
   work_type: '',
   seniority: '',
+  source_adzuna: true,
+  source_remoteok: true,
+  source_arbeitnow: true,
+  source_hn: true,
 };
 
 export default function PreferencesPage() {
@@ -51,6 +62,10 @@ export default function PreferencesPage() {
           location: data.location ?? '',
           work_type: data.work_type ?? '',
           seniority: data.seniority ?? '',
+          source_adzuna: data.source_adzuna ?? true,
+          source_remoteok: data.source_remoteok ?? true,
+          source_arbeitnow: data.source_arbeitnow ?? true,
+          source_hn: data.source_hn ?? true,
         });
       } catch {
         setError('Network error — could not reach the server.');
@@ -64,6 +79,15 @@ export default function PreferencesPage() {
   const update = (field, value) => {
     setForm((prev) => ({ ...prev, [field]: value }));
     setSuccess('');
+  };
+
+  // ---- source toggle (prevent disabling the last active source) ----
+  const activeSourceCount = SOURCES.filter((s) => form[s.key]).length;
+
+  const toggleSource = (key) => {
+    const current = form[key];
+    if (current && activeSourceCount <= 1) return; // block last source
+    update(key, !current);
   };
 
   // ---- save ----
@@ -176,6 +200,36 @@ export default function PreferencesPage() {
                 <span>{s.label}</span>
               </label>
             ))}
+          </div>
+        </fieldset>
+
+        {/* Job Sources */}
+        <fieldset className="pref-fieldset">
+          <legend>Job Sources</legend>
+          <div className="pref-sources">
+            {SOURCES.map((src) => {
+              const active = form[src.key];
+              const isLast = active && activeSourceCount <= 1;
+              return (
+                <div key={src.key} className="pref-source-row">
+                  <span className="pref-source-label">{src.label}</span>
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={active}
+                    className={`pref-toggle${active ? ' on' : ''}${isLast ? ' locked' : ''}`}
+                    disabled={isLast}
+                    onClick={() => toggleSource(src.key)}
+                    title={isLast ? 'At least one source must stay enabled' : ''}
+                  >
+                    <span className="pref-toggle-knob" />
+                  </button>
+                </div>
+              );
+            })}
+            {activeSourceCount <= 1 && (
+              <p className="pref-source-hint">At least one source must stay enabled.</p>
+            )}
           </div>
         </fieldset>
 

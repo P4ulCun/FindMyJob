@@ -127,6 +127,74 @@
   font-size: 0.875rem;
 }
 
+/* ---------- Job Sources ---------- */
+.pref-sources {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.pref-source-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 1rem;
+  border: 1px solid #e4e7ec;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.pref-source-label {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #344054;
+}
+
+/* toggle switch */
+.pref-toggle {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  border: none;
+  border-radius: 12px;
+  background: #d0d5dd;
+  cursor: pointer;
+  transition: background 0.2s;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.pref-toggle .pref-toggle-knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s;
+}
+
+.pref-toggle.on {
+  background: #12b76a;
+}
+
+.pref-toggle.on .pref-toggle-knob {
+  transform: translateX(20px);
+}
+
+.pref-toggle.locked {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pref-source-hint {
+  margin: 0.25rem 0 0;
+  font-size: 0.8rem;
+  color: #b42318;
+}
+
 /* ---------- Save button ---------- */
 .pref-save-btn {
   width: 100%;
