@@ -1,8 +1,6 @@
 .pref-page {
   max-width: 640px;
-  margin: 2rem auto;
-  padding: 0 1rem;
-  font-family: Inter, system-ui, -apple-system, sans-serif;
+  margin: 0 auto;
 }
 
 .pref-page h1 {
@@ -216,4 +214,19 @@
 .pref-save-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 600px) {
+  .pref-page h1 {
+    font-size: 1.4rem;
+  }
+
+  .pref-radio-group {
+    flex-direction: column;
+  }
+
+  .pref-radio-card {
+    flex: none;
+  }
 }
