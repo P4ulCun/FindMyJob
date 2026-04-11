@@ -1,0 +1,151 @@
+.pref-page {
+  max-width: 640px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+}
+
+.pref-page h1 {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.pref-loading {
+  color: #667085;
+}
+
+/* ---------- Form ---------- */
+.pref-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* ---------- Text fields ---------- */
+.pref-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.pref-field label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #344054;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.pref-field input {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  font-size: 0.95rem;
+  font-family: inherit;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  background: #fff;
+  color: #1d2939;
+  transition: border-color 0.15s;
+  box-sizing: border-box;
+}
+
+.pref-field input:focus {
+  outline: none;
+  border-color: #646cff;
+  box-shadow: 0 0 0 3px rgba(100, 108, 255, 0.15);
+}
+
+/* ---------- Fieldset / radio cards ---------- */
+.pref-fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.pref-fieldset legend {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #344054;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.45rem;
+}
+
+.pref-radio-group {
+  display: flex;
+  gap: 0.65rem;
+}
+
+.pref-radio-card {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 0.5rem;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #344054;
+  transition: border-color 0.15s, background 0.15s;
+  text-align: center;
+}
+
+.pref-radio-card input {
+  display: none;
+}
+
+.pref-radio-card:hover {
+  border-color: #646cff;
+}
+
+.pref-radio-card.selected {
+  border-color: #646cff;
+  background: #f0f0ff;
+  color: #646cff;
+  font-weight: 600;
+}
+
+/* ---------- Banners ---------- */
+.pref-page .error-banner {
+  padding: 0.75rem 1rem;
+  background: #fef3f2;
+  border: 1px solid #fda29b;
+  border-radius: 8px;
+  color: #b42318;
+  font-size: 0.875rem;
+}
+
+.pref-page .success-banner {
+  padding: 0.75rem 1rem;
+  background: #ecfdf3;
+  border: 1px solid #6ce9a6;
+  border-radius: 8px;
+  color: #027a48;
+  font-size: 0.875rem;
+}
+
+/* ---------- Save button ---------- */
+.pref-save-btn {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  background: #12b76a;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.pref-save-btn:hover:not(:disabled) {
+  background: #039855;
+}
+
+.pref-save-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
