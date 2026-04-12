@@ -1,7 +1,9 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Navbar from './components/Navbar/Navbar'
 import CVPage from './pages/CV/CVPage'
 import PreferencesPage from './pages/Preferences/PreferencesPage'
+import JobsPage from './pages/Jobs/JobsPage'
+import AuthPage from './pages/Auth/AuthPage'
 import './App.css'
 
 function Home() {
@@ -15,17 +17,33 @@ function Home() {
   )
 }
 
+function PrivateRoute({ children }) {
+  const token = localStorage.getItem('access_token')
+  return token ? children : <Navigate to="/login" replace />
+}
+
 function App() {
   return (
     <BrowserRouter>
-      <Navbar />
-      <main className="page-shell">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/cv" element={<CVPage />} />
-          <Route path="/preferences" element={<PreferencesPage />} />
-        </Routes>
-      </main>
+      <Routes>
+        <Route path="/login" element={<AuthPage />} />
+        <Route
+          path="/*"
+          element={
+            <PrivateRoute>
+              <Navbar />
+              <main className="page-shell">
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/cv" element={<CVPage />} />
+                  <Route path="/preferences" element={<PreferencesPage />} />
+                  <Route path="/jobs" element={<JobsPage />} />
+                </Routes>
+              </main>
+            </PrivateRoute>
+          }
+        />
+      </Routes>
     </BrowserRouter>
   )
 }

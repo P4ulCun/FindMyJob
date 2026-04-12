@@ -30,6 +30,8 @@ services:
       - DATABASE_HOST=db
       - DATABASE_PORT=5432
       - LM_STUDIO_URL=http://host.docker.internal:1234/v1
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       db:
         condition: service_healthy

@@ -52,6 +52,16 @@ def upload_cv(request):
     return Response(CVSerializer(cv).data, status=status.HTTP_201_CREATED)
 
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def cv_me(request):
+    """Return the current user's most recent CV, or 404 if none."""
+    cv = request.user.cvs.first()
+    if not cv:
+        return Response({'error': 'No CV found.'}, status=status.HTTP_404_NOT_FOUND)
+    return Response(CVSerializer(cv).data)
+
+
 @api_view(['GET', 'PUT', 'PATCH'])
 @permission_classes([IsAuthenticated])
 @parser_classes([JSONParser])

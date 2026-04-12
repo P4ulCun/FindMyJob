@@ -47,6 +47,26 @@
   background: #646cff;
 }
 
+/* ---- Logout ---- */
+.logout-btn {
+  margin-left: auto;
+  padding: 0.4rem 0.9rem;
+  background: transparent;
+  border: 1px solid rgba(196, 196, 224, 0.35);
+  border-radius: 6px;
+  color: #c4c4e0;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+
+.logout-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
 /* ---- Responsive ---- */
 @media (max-width: 600px) {
   .navbar {
