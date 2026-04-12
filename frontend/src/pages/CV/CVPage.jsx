@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { authHeaders } from '../../utils/api';
 import './CVPage.css';
 
@@ -23,6 +23,28 @@ export default function CVPage() {
   const [editData, setEditData] = useState(null);
   const [dragOver, setDragOver] = useState(false);
   const inputRef = useRef();
+
+  // ---- load existing CV on mount ----
+  useEffect(() => {
+    async function fetchExistingCV() {
+      try {
+        const res = await fetch('/api/cv/me/', { headers: authHeaders() });
+        if (!res.ok) return; // no CV yet, stay on upload form
+        const data = await res.json();
+        setCvId(data.id);
+        setPreview(data);
+        setEditData({
+          extracted_name: data.extracted_name || '',
+          extracted_skills: data.extracted_skills || [],
+          extracted_experience: data.extracted_experience || [],
+          extracted_education: data.extracted_education || [],
+        });
+      } catch {
+        // silently ignore — upload form will show
+      }
+    }
+    fetchExistingCV();
+  }, []);
 
   // ---- validation ----
   const validate = (f) => {
