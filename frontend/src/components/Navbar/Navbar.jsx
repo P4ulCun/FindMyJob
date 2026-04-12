@@ -1,13 +1,21 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 
 const links = [
   { to: '/', label: 'Home' },
   { to: '/cv', label: 'Upload CV' },
   { to: '/preferences', label: 'Preferences' },
+  { to: '/jobs', label: 'Find Jobs' },
 ];
 
 export default function Navbar() {
+  const navigate = useNavigate();
+
+  function handleLogout() {
+    localStorage.removeItem('access_token');
+    navigate('/login');
+  }
+
   return (
     <nav className="navbar">
       <span className="navbar-brand">FindMyJob</span>
@@ -25,6 +33,10 @@ export default function Navbar() {
           </li>
         ))}
       </ul>
+
+      <button className="logout-btn" onClick={handleLogout}>
+        Log out
+      </button>
     </nav>
   );
 }
