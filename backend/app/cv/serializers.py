@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CV
+from .models import CV, TailoredCV
 
 
 class CVSerializer(serializers.ModelSerializer):
@@ -15,3 +15,21 @@ class CVSerializer(serializers.ModelSerializer):
             'uploaded_at',
         ]
         read_only_fields = ['id', 'file', 'uploaded_at']
+
+
+class TailoredCVSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TailoredCV
+        fields = [
+            'id',
+            'original_cv',
+            'job_title',
+            'job_company',
+            'job_description',
+            'tailored_skills',
+            'tailored_experience',
+            'tailored_education',
+            'created_at',
+        ]
+        read_only_fields = fields
+

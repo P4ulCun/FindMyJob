@@ -6,9 +6,10 @@ from rest_framework.parsers import MultiPartParser, JSONParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from .models import CV
-from .serializers import CVSerializer
+from .models import CV, TailoredCV
+from .serializers import CVSerializer, TailoredCVSerializer
 from .cv_parser import extract_text_from_pdf, parse_cv_text
+from .cv_tailor_agent import CVTailorAgent
 
 MAX_FILE_SIZE = 5 * 1024 * 1024  # 5 MB
 
@@ -82,3 +83,66 @@ def cv_detail(request, pk):
         serializer.save()
         return Response(serializer.data)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# ───────────────────────────────────────────────
+#  CV Tailoring (Agent 2)
+# ───────────────────────────────────────────────
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def tailor_cv(request):
+    """Tailor the user's CV for a specific job listing.
+
+    Expects JSON body: { job_title, job_company?, job_description }
+    """
+    job_title = request.data.get('job_title', '').strip()
+    job_description = request.data.get('job_description', '').strip()
+    job_company = request.data.get('job_company', '').strip()
+
+    if not job_title or not job_description:
+        return Response(
+            {'error': 'job_title and job_description are required.'},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    cv = request.user.cvs.first()
+    if not cv:
+        return Response(
+            {'error': 'Please upload a CV first.'},
+            status=status.HTTP_404_NOT_FOUND,
+        )
+
+    cv_data = {
+        'skills': cv.extracted_skills or [],
+        'experience': cv.extracted_experience or [],
+        'education': cv.extracted_education or [],
+    }
+
+    agent = CVTailorAgent()
+    tailored = agent.tailor(cv_data, {
+        'title': job_title,
+        'company': job_company,
+        'description': job_description,
+    })
+
+    tailored_cv = TailoredCV.objects.create(
+        user=request.user,
+        original_cv=cv,
+        job_title=job_title,
+        job_company=job_company,
+        job_description=job_description,
+        tailored_skills=tailored['tailored_skills'],
+        tailored_experience=tailored['tailored_experience'],
+        tailored_education=tailored['tailored_education'],
+    )
+
+    return Response(TailoredCVSerializer(tailored_cv).data, status=status.HTTP_201_CREATED)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def tailored_cv_list(request):
+    """Return all tailored CVs for the authenticated user."""
+    tailored = TailoredCV.objects.filter(user=request.user)
+    return Response(TailoredCVSerializer(tailored, many=True).data)
