@@ -48,3 +48,28 @@ class TailoredCV(models.Model):
 
     def __str__(self):
         return f'TailoredCV #{self.pk} for "{self.job_title}" – {self.user}'
+
+
+class CoverLetter(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='cover_letters',
+    )
+    original_cv = models.ForeignKey(
+        CV,
+        on_delete=models.CASCADE,
+        related_name='cover_letters',
+    )
+    job_title = models.CharField(max_length=255)
+    job_company = models.CharField(max_length=255, blank=True, default='')
+    job_description = models.TextField()
+    body = models.TextField(help_text='Generated cover letter text (editable by user)')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'cover_letters'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f'CoverLetter #{self.pk} for "{self.job_title}" – {self.user}'

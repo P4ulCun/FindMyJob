@@ -4,6 +4,7 @@ import CVPage from './pages/CV/CVPage'
 import PreferencesPage from './pages/Preferences/PreferencesPage'
 import JobsPage from './pages/Jobs/JobsPage'
 import TailoredCVPage from './pages/TailoredCV/TailoredCVPage'
+import CoverLettersPage from './pages/CoverLetters/CoverLettersPage'
 import AuthPage from './pages/Auth/AuthPage'
 import './App.css'
 
@@ -40,6 +41,7 @@ function App() {
                   <Route path="/preferences" element={<PreferencesPage />} />
                   <Route path="/jobs" element={<JobsPage />} />
                   <Route path="/tailored-cvs" element={<TailoredCVPage />} />
+                  <Route path="/cover-letters" element={<CoverLettersPage />} />
                 </Routes>
               </main>
             </PrivateRoute>

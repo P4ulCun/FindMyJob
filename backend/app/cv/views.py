@@ -1,15 +1,18 @@
+import io
 import os
 
+from django.http import FileResponse
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes, parser_classes
 from rest_framework.parsers import MultiPartParser, JSONParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from .models import CV, TailoredCV
-from .serializers import CVSerializer, TailoredCVSerializer
+from .models import CV, TailoredCV, CoverLetter
+from .serializers import CVSerializer, TailoredCVSerializer, CoverLetterSerializer
 from .cv_parser import extract_text_from_pdf, parse_cv_text
 from .cv_tailor_agent import CVTailorAgent
+from .cover_letter_agent import CoverLetterAgent
 
 MAX_FILE_SIZE = 5 * 1024 * 1024  # 5 MB
 
@@ -146,3 +149,126 @@ def tailored_cv_list(request):
     """Return all tailored CVs for the authenticated user."""
     tailored = TailoredCV.objects.filter(user=request.user)
     return Response(TailoredCVSerializer(tailored, many=True).data)
+
+
+# ───────────────────────────────────────────────
+#  Cover Letter Generation (Agent 2)
+# ───────────────────────────────────────────────
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def generate_cover_letter(request):
+    """Generate a cover letter for a specific job listing.
+
+    Expects JSON body: { job_title, job_company?, job_description }
+    """
+    job_title = request.data.get('job_title', '').strip()
+    job_description = request.data.get('job_description', '').strip()
+    job_company = request.data.get('job_company', '').strip()
+
+    if not job_title or not job_description:
+        return Response(
+            {'error': 'job_title and job_description are required.'},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    cv = request.user.cvs.first()
+    if not cv:
+        return Response(
+            {'error': 'Please upload a CV first.'},
+            status=status.HTTP_404_NOT_FOUND,
+        )
+
+    cv_data = {
+        'name': cv.extracted_name or '',
+        'skills': cv.extracted_skills or [],
+        'experience': cv.extracted_experience or [],
+        'education': cv.extracted_education or [],
+    }
+
+    agent = CoverLetterAgent()
+    body = agent.generate(cv_data, {
+        'title': job_title,
+        'company': job_company,
+        'description': job_description,
+    })
+
+    cover_letter = CoverLetter.objects.create(
+        user=request.user,
+        original_cv=cv,
+        job_title=job_title,
+        job_company=job_company,
+        job_description=job_description,
+        body=body,
+    )
+
+    return Response(CoverLetterSerializer(cover_letter).data, status=status.HTTP_201_CREATED)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def cover_letter_list(request):
+    """Return all cover letters for the authenticated user."""
+    letters = CoverLetter.objects.filter(user=request.user)
+    return Response(CoverLetterSerializer(letters, many=True).data)
+
+
+@api_view(['GET', 'PATCH'])
+@permission_classes([IsAuthenticated])
+def cover_letter_detail(request, pk):
+    """Retrieve or update a cover letter owned by the current user."""
+    try:
+        letter = CoverLetter.objects.get(pk=pk, user=request.user)
+    except CoverLetter.DoesNotExist:
+        return Response({'error': 'Cover letter not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        return Response(CoverLetterSerializer(letter).data)
+
+    # PATCH — only body is editable
+    serializer = CoverLetterSerializer(letter, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def download_cover_letter(request, pk):
+    """Download a cover letter as a .docx file."""
+    try:
+        letter = CoverLetter.objects.get(pk=pk, user=request.user)
+    except CoverLetter.DoesNotExist:
+        return Response({'error': 'Cover letter not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+    from docx import Document
+    from docx.shared import Pt
+
+    doc = Document()
+
+    style = doc.styles['Normal']
+    font = style.font
+    font.name = 'Calibri'
+    font.size = Pt(11)
+
+    # Add body paragraphs
+    for paragraph_text in letter.body.split('\n'):
+        if paragraph_text.strip():
+            doc.add_paragraph(paragraph_text)
+        else:
+            doc.add_paragraph('')
+
+    buf = io.BytesIO()
+    doc.save(buf)
+    buf.seek(0)
+
+    safe_title = ''.join(c for c in letter.job_title if c.isalnum() or c in ' -_')[:50]
+    filename = f'Cover_Letter_{safe_title}.docx'
+
+    return FileResponse(
+        buf,
+        as_attachment=True,
+        filename=filename,
+        content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    )

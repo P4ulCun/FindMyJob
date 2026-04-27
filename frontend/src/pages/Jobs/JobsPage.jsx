@@ -21,9 +21,11 @@ function scoreBg(score) {
   return '#fef3f2'
 }
 
-function JobCard({ job, onTailor }) {
+function JobCard({ job }) {
   const [tailoring, setTailoring] = useState(false)
   const [tailorResult, setTailorResult] = useState(null)
+  const [generating, setGenerating] = useState(false)
+  const [generateResult, setGenerateResult] = useState(null)
 
   async function handleTailor() {
     setTailoring(true)
@@ -40,7 +42,6 @@ function JobCard({ job, onTailor }) {
       })
       if (res.ok) {
         setTailorResult({ success: true })
-        if (onTailor) onTailor()
       } else {
         const data = await res.json()
         setTailorResult({ success: false, error: data.error || 'Tailoring failed.' })
@@ -49,6 +50,32 @@ function JobCard({ job, onTailor }) {
       setTailorResult({ success: false, error: 'Could not connect to server.' })
     } finally {
       setTailoring(false)
+    }
+  }
+
+  async function handleGenerateCoverLetter() {
+    setGenerating(true)
+    setGenerateResult(null)
+    try {
+      const res = await apiFetch('/api/cv/cover-letter/generate/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          job_title: job.title || '',
+          job_company: job.company || '',
+          job_description: job.description || '',
+        }),
+      })
+      if (res.ok) {
+        setGenerateResult({ success: true })
+      } else {
+        const data = await res.json()
+        setGenerateResult({ success: false, error: data.error || 'Generation failed.' })
+      }
+    } catch {
+      setGenerateResult({ success: false, error: 'Could not connect to server.' })
+    } finally {
+      setGenerating(false)
     }
   }
 
@@ -107,6 +134,14 @@ function JobCard({ job, onTailor }) {
         >
           {tailoring ? 'Tailoring…' : '✨ Tailor CV'}
         </button>
+
+        <button
+          className="cover-letter-btn"
+          onClick={handleGenerateCoverLetter}
+          disabled={generating}
+        >
+          {generating ? 'Generating…' : '📝 Cover Letter'}
+        </button>
       </div>
 
       {tailorResult && (
@@ -114,6 +149,14 @@ function JobCard({ job, onTailor }) {
           {tailorResult.success
             ? <>CV tailored successfully! <a href="/tailored-cvs">View tailored CVs →</a></>
             : tailorResult.error}
+        </div>
+      )}
+
+      {generateResult && (
+        <div className={`tailor-result ${generateResult.success ? 'tailor-success' : 'tailor-error'}`}>
+          {generateResult.success
+            ? <>Cover letter generated! <a href="/cover-letters">View cover letters →</a></>
+            : generateResult.error}
         </div>
       )}
     </div>
