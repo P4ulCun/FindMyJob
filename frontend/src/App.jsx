@@ -3,6 +3,7 @@ import Navbar from './components/Navbar/Navbar'
 import CVPage from './pages/CV/CVPage'
 import PreferencesPage from './pages/Preferences/PreferencesPage'
 import JobsPage from './pages/Jobs/JobsPage'
+import TailoredCVPage from './pages/TailoredCV/TailoredCVPage'
 import AuthPage from './pages/Auth/AuthPage'
 import './App.css'
 
@@ -38,6 +39,7 @@ function App() {
                   <Route path="/cv" element={<CVPage />} />
                   <Route path="/preferences" element={<PreferencesPage />} />
                   <Route path="/jobs" element={<JobsPage />} />
+                  <Route path="/tailored-cvs" element={<TailoredCVPage />} />
                 </Routes>
               </main>
             </PrivateRoute>
@@ -49,3 +51,4 @@ function App() {
 }
 
 export default App
+

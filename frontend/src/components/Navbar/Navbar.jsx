@@ -6,6 +6,7 @@ const links = [
   { to: '/cv', label: 'Upload CV' },
   { to: '/preferences', label: 'Preferences' },
   { to: '/jobs', label: 'Find Jobs' },
+  { to: '/tailored-cvs', label: 'Tailored CVs' },
 ];
 
 export default function Navbar() {

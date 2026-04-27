@@ -21,7 +21,37 @@ function scoreBg(score) {
   return '#fef3f2'
 }
 
-function JobCard({ job }) {
+function JobCard({ job, onTailor }) {
+  const [tailoring, setTailoring] = useState(false)
+  const [tailorResult, setTailorResult] = useState(null)
+
+  async function handleTailor() {
+    setTailoring(true)
+    setTailorResult(null)
+    try {
+      const res = await apiFetch('/api/cv/tailor/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          job_title: job.title || '',
+          job_company: job.company || '',
+          job_description: job.description || '',
+        }),
+      })
+      if (res.ok) {
+        setTailorResult({ success: true })
+        if (onTailor) onTailor()
+      } else {
+        const data = await res.json()
+        setTailorResult({ success: false, error: data.error || 'Tailoring failed.' })
+      }
+    } catch {
+      setTailorResult({ success: false, error: 'Could not connect to server.' })
+    } finally {
+      setTailoring(false)
+    }
+  }
+
   return (
     <div className="job-card">
       <div className="job-card-header">
@@ -60,14 +90,32 @@ function JobCard({ job }) {
         </div>
       )}
 
-      <a
-        href={job.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="view-job-btn"
-      >
-        View Job →
-      </a>
+      <div className="job-card-actions">
+        <a
+          href={job.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="view-job-btn"
+        >
+          View Job →
+        </a>
+
+        <button
+          className="tailor-btn"
+          onClick={handleTailor}
+          disabled={tailoring}
+        >
+          {tailoring ? 'Tailoring…' : '✨ Tailor CV'}
+        </button>
+      </div>
+
+      {tailorResult && (
+        <div className={`tailor-result ${tailorResult.success ? 'tailor-success' : 'tailor-error'}`}>
+          {tailorResult.success
+            ? <>CV tailored successfully! <a href="/tailored-cvs">View tailored CVs →</a></>
+            : tailorResult.error}
+        </div>
+      )}
     </div>
   )
 }
