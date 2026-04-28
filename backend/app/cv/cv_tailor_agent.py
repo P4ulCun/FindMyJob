@@ -18,6 +18,60 @@ class CVTailorAgent:
         self.model = CV_TAILOR_MODEL
         self.api_url = f'{LM_STUDIO_URL}/chat/completions'
 
+    def _normalize_section_changes(self, section_name: str, original_items: list, raw_items) -> list:
+        if not isinstance(raw_items, list):
+            raw_items = []
+
+        changes = []
+        max_len = len(original_items)
+
+        for idx in range(max_len):
+            before = str(original_items[idx]).strip()
+            raw_item = raw_items[idx] if idx < len(raw_items) else {}
+
+            if isinstance(raw_item, dict):
+                after = str(raw_item.get('after', before)).strip() or before
+                reason = str(raw_item.get('reason', '')).strip()
+            else:
+                after = str(raw_item).strip() or before
+                reason = ''
+
+            changes.append({
+                'id': f'{section_name}-{idx}',
+                'before': before,
+                'after': after,
+                'reason': reason or 'Adjusted wording to better match the job requirements.',
+                'status': 'pending',
+            })
+
+        return changes
+
+    def _build_result(self, cv_data: dict, result: dict) -> dict:
+        change_set = {
+            'skills': self._normalize_section_changes(
+                'skills',
+                cv_data.get('skills', []),
+                result.get('skills'),
+            ),
+            'experience': self._normalize_section_changes(
+                'experience',
+                cv_data.get('experience', []),
+                result.get('experience'),
+            ),
+            'education': self._normalize_section_changes(
+                'education',
+                cv_data.get('education', []),
+                result.get('education'),
+            ),
+        }
+
+        return {
+            'change_set': change_set,
+            'tailored_skills': [item['after'] for item in change_set['skills']],
+            'tailored_experience': [item['after'] for item in change_set['experience']],
+            'tailored_education': [item['after'] for item in change_set['education']],
+        }
+
     def tailor(self, cv_data: dict, job: dict) -> dict:
         skills = ', '.join(cv_data.get('skills', [])) or 'Not specified'
         experience = '; '.join(cv_data.get('experience', [])) or 'Not specified'
@@ -31,6 +85,7 @@ RULES:
 3. Adjust education descriptions only if wording can better match the job.
 4. NEVER invent skills, experience, or qualifications that are not in the original CV.
 5. Keep the same number of items in each list.
+6. For every item, include a short reason that explains why the wording changed.
 
 CANDIDATE CV:
 - Skills: {skills}
@@ -43,7 +98,7 @@ JOB LISTING:
 - Description: {job.get('description', '')[:800]}
 
 Reply ONLY with a valid JSON object, no markdown, no extra text:
-{{"tailored_skills": [<list of strings>], "tailored_experience": [<list of strings>], "tailored_education": [<list of strings>]}}"""
+{{"skills": [{{"after": "<rewritten item>", "reason": "<short why>"}}], "experience": [{{"after": "<rewritten item>", "reason": "<short why>"}}], "education": [{{"after": "<rewritten item>", "reason": "<short why>"}}]}}"""
 
         try:
             resp = requests.post(
@@ -56,6 +111,7 @@ Reply ONLY with a valid JSON object, no markdown, no extra text:
                 },
                 timeout=60,
             )
+            resp.raise_for_status()
             content = resp.json()['choices'][0]['message']['content'].strip()
 
             # Strip markdown code fences if the model added them
@@ -65,18 +121,7 @@ Reply ONLY with a valid JSON object, no markdown, no extra text:
                     content = content[4:]
 
             result = json.loads(content)
-
-            # Ensure all expected keys exist
-            return {
-                'tailored_skills': result.get('tailored_skills', cv_data.get('skills', [])),
-                'tailored_experience': result.get('tailored_experience', cv_data.get('experience', [])),
-                'tailored_education': result.get('tailored_education', cv_data.get('education', [])),
-            }
+            return self._build_result(cv_data, result)
         except Exception as e:
             print(f'[CVTailorAgent] error: {e}')
-            # Fallback: return original CV data unchanged
-            return {
-                'tailored_skills': cv_data.get('skills', []),
-                'tailored_experience': cv_data.get('experience', []),
-                'tailored_education': cv_data.get('education', []),
-            }
+            return self._build_result(cv_data, {})

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { apiFetch } from '../../utils/api'
 import './JobsPage.css'
 
@@ -26,6 +27,7 @@ function JobCard({ job }) {
   const [tailorResult, setTailorResult] = useState(null)
   const [generating, setGenerating] = useState(false)
   const [generateResult, setGenerateResult] = useState(null)
+  const navigate = useNavigate()
 
   async function handleTailor() {
     setTailoring(true)
@@ -41,7 +43,8 @@ function JobCard({ job }) {
         }),
       })
       if (res.ok) {
-        setTailorResult({ success: true })
+        const data = await res.json()
+        setTailorResult({ success: true, id: data.id })
       } else {
         const data = await res.json()
         setTailorResult({ success: false, error: data.error || 'Tailoring failed.' })
@@ -147,7 +150,7 @@ function JobCard({ job }) {
       {tailorResult && (
         <div className={`tailor-result ${tailorResult.success ? 'tailor-success' : 'tailor-error'}`}>
           {tailorResult.success
-            ? <>CV tailored successfully! <a href="/tailored-cvs">View tailored CVs →</a></>
+            ? <>CV tailored successfully! <button type="button" className="inline-link-btn" onClick={() => navigate(`/tailored-cvs/${tailorResult.id}`)}>Review changes →</button></>
             : tailorResult.error}
         </div>
       )}

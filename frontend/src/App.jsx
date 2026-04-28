@@ -41,6 +41,7 @@ function App() {
                   <Route path="/preferences" element={<PreferencesPage />} />
                   <Route path="/jobs" element={<JobsPage />} />
                   <Route path="/tailored-cvs" element={<TailoredCVPage />} />
+                  <Route path="/tailored-cvs/:id" element={<TailoredCVPage />} />
                   <Route path="/cover-letters" element={<CoverLettersPage />} />
                 </Routes>
               </main>

@@ -15,6 +15,40 @@ from .cv_tailor_agent import CVTailorAgent
 from .cover_letter_agent import CoverLetterAgent
 
 MAX_FILE_SIZE = 5 * 1024 * 1024  # 5 MB
+VALID_CHANGE_STATUSES = {'pending', 'accepted', 'rejected'}
+
+
+def _update_change_statuses(change_set: dict, changes: list) -> dict:
+    if not isinstance(change_set, dict):
+        change_set = {}
+
+    indexed_changes = {}
+    for section_name in ('skills', 'experience', 'education'):
+        section_changes = change_set.get(section_name, [])
+        if isinstance(section_changes, list):
+            indexed_changes[section_name] = section_changes
+
+    for change in changes:
+        section_name = change.get('section')
+        change_id = change.get('id')
+        new_status = change.get('status')
+
+        if section_name not in indexed_changes:
+            raise ValueError(f'Unknown section "{section_name}".')
+        if new_status not in VALID_CHANGE_STATUSES:
+            raise ValueError(f'Invalid status "{new_status}".')
+
+        matched = False
+        for item in indexed_changes[section_name]:
+            if isinstance(item, dict) and item.get('id') == change_id:
+                item['status'] = new_status
+                matched = True
+                break
+
+        if not matched:
+            raise ValueError(f'Change "{change_id}" not found in section "{section_name}".')
+
+    return change_set
 
 
 @api_view(['POST'])
@@ -135,6 +169,10 @@ def tailor_cv(request):
         job_title=job_title,
         job_company=job_company,
         job_description=job_description,
+        original_skills=cv_data['skills'],
+        original_experience=cv_data['experience'],
+        original_education=cv_data['education'],
+        change_set=tailored['change_set'],
         tailored_skills=tailored['tailored_skills'],
         tailored_experience=tailored['tailored_experience'],
         tailored_education=tailored['tailored_education'],
@@ -149,6 +187,35 @@ def tailored_cv_list(request):
     """Return all tailored CVs for the authenticated user."""
     tailored = TailoredCV.objects.filter(user=request.user)
     return Response(TailoredCVSerializer(tailored, many=True).data)
+
+
+@api_view(['GET', 'PATCH'])
+@permission_classes([IsAuthenticated])
+@parser_classes([JSONParser])
+def tailored_cv_detail(request, pk):
+    """Retrieve or update review statuses for a tailored CV."""
+    try:
+        tailored_cv = TailoredCV.objects.get(pk=pk, user=request.user)
+    except TailoredCV.DoesNotExist:
+        return Response({'error': 'Tailored CV not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        return Response(TailoredCVSerializer(tailored_cv).data)
+
+    changes = request.data.get('changes')
+    if not isinstance(changes, list) or not changes:
+        return Response(
+            {'error': 'changes must be a non-empty list.'},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    try:
+        tailored_cv.change_set = _update_change_statuses(tailored_cv.change_set, changes)
+    except ValueError as exc:
+        return Response({'error': str(exc)}, status=status.HTTP_400_BAD_REQUEST)
+
+    tailored_cv.save(update_fields=['change_set'])
+    return Response(TailoredCVSerializer(tailored_cv).data)
 
 
 # ───────────────────────────────────────────────
