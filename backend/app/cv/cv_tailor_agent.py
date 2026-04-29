@@ -36,6 +36,9 @@ class CVTailorAgent:
                 after = str(raw_item).strip() or before
                 reason = ''
 
+            if after == before:
+                continue
+
             changes.append({
                 'id': f'{section_name}-{idx}',
                 'before': before,
@@ -46,7 +49,31 @@ class CVTailorAgent:
 
         return changes
 
+    def _resolve_section_items(self, original_items: list, raw_items) -> list:
+        if not isinstance(raw_items, list):
+            raw_items = []
+
+        resolved_items = []
+        max_len = len(original_items)
+
+        for idx in range(max_len):
+            before = str(original_items[idx]).strip()
+            raw_item = raw_items[idx] if idx < len(raw_items) else {}
+
+            if isinstance(raw_item, dict):
+                after = str(raw_item.get('after', before)).strip() or before
+            else:
+                after = str(raw_item).strip() or before
+
+            resolved_items.append(after)
+
+        return resolved_items
+
     def _build_result(self, cv_data: dict, result: dict) -> dict:
+        tailored_skills = self._resolve_section_items(cv_data.get('skills', []), result.get('skills'))
+        tailored_experience = self._resolve_section_items(cv_data.get('experience', []), result.get('experience'))
+        tailored_education = self._resolve_section_items(cv_data.get('education', []), result.get('education'))
+
         change_set = {
             'skills': self._normalize_section_changes(
                 'skills',
@@ -67,9 +94,9 @@ class CVTailorAgent:
 
         return {
             'change_set': change_set,
-            'tailored_skills': [item['after'] for item in change_set['skills']],
-            'tailored_experience': [item['after'] for item in change_set['experience']],
-            'tailored_education': [item['after'] for item in change_set['education']],
+            'tailored_skills': tailored_skills,
+            'tailored_experience': tailored_experience,
+            'tailored_education': tailored_education,
         }
 
     def tailor(self, cv_data: dict, job: dict) -> dict:
@@ -86,6 +113,7 @@ RULES:
 4. NEVER invent skills, experience, or qualifications that are not in the original CV.
 5. Keep the same number of items in each list.
 6. For every item, include a short reason that explains why the wording changed.
+7. If an item does not need any change, return it unchanged; the backend will exclude unchanged items from review.
 
 CANDIDATE CV:
 - Skills: {skills}

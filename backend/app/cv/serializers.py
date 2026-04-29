@@ -7,12 +7,22 @@ def _effective_section_items(change_set, section_name, fallback_items):
     if not section_changes:
         return fallback_items
 
-    items = []
+    items = list(fallback_items or [])
     for change in section_changes:
         if not isinstance(change, dict):
             continue
+
+        change_id = str(change.get('id', ''))
+        try:
+            change_index = int(change_id.rsplit('-', 1)[1])
+        except (IndexError, ValueError):
+            continue
+
+        if change_index >= len(items):
+            continue
+
         status = change.get('status', 'pending')
-        items.append(change.get('before') if status == 'rejected' else change.get('after'))
+        items[change_index] = change.get('before') if status == 'rejected' else change.get('after')
 
     return items or fallback_items
 

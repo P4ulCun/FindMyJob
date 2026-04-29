@@ -1,5 +1,6 @@
-import { NavLink, useNavigate } from 'react-router-dom';
-import './Navbar.css';
+import { NavLink, useNavigate } from 'react-router-dom'
+import { clearCachedSearch } from '../../utils/jobsSearchCache'
+import './Navbar.css'
 
 const links = [
   { to: '/', label: 'Home' },
@@ -14,8 +15,9 @@ export default function Navbar() {
   const navigate = useNavigate();
 
   function handleLogout() {
-    localStorage.removeItem('access_token');
-    navigate('/login');
+    localStorage.removeItem('access_token')
+    clearCachedSearch()
+    navigate('/login')
   }
 
   return (

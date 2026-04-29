@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { apiFetch } from '../../utils/api'
+import { loadCachedSearch, saveCachedSearch } from '../../utils/jobsSearchCache'
 import './JobsPage.css'
 
 const SOURCE_COLORS = {
@@ -166,12 +167,17 @@ function JobCard({ job }) {
   )
 }
 
+function initialSearchState() {
+  const c = loadCachedSearch()
+  return { jobs: c.jobs, message: c.message, searched: c.searched }
+}
+
 export default function JobsPage() {
-  const [jobs, setJobs] = useState([])
+  const [jobs, setJobs] = useState(() => initialSearchState().jobs)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [message, setMessage] = useState('')
-  const [searched, setSearched] = useState(false)
+  const [message, setMessage] = useState(() => initialSearchState().message)
+  const [searched, setSearched] = useState(() => initialSearchState().searched)
 
   async function handleSearch() {
     setLoading(true)
@@ -188,9 +194,12 @@ export default function JobsPage() {
         return
       }
 
-      setJobs(data.jobs || [])
-      setMessage(data.message || '')
+      const nextJobs = data.jobs || []
+      const nextMessage = data.message || ''
+      setJobs(nextJobs)
+      setMessage(nextMessage)
       setSearched(true)
+      saveCachedSearch({ jobs: nextJobs, message: nextMessage })
     } catch {
       setError('Could not connect to the server.')
     } finally {

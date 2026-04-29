@@ -9,9 +9,21 @@ const SECTIONS = [
     { key: 'education', label: 'Education' },
 ];
 
-function ChangeCard({ sectionKey, change, onStatusChange, saving }) {
+function buildPreviewSections(tailoredCV) {
+    if (!tailoredCV) {
+        return [];
+    }
+
+    return [
+        { key: 'skills', label: 'Skills', items: tailoredCV.tailored_skills || [] },
+        { key: 'experience', label: 'Experience', items: tailoredCV.tailored_experience || [] },
+        { key: 'education', label: 'Education', items: tailoredCV.tailored_education || [] },
+    ].filter((section) => section.items.length > 0);
+}
+
+function ChangeCard({ sectionKey, change, onStatusChange, saving, selected, onSelect }) {
     return (
-        <article className="change-card">
+        <article className={`change-card ${selected ? 'selected' : ''}`}>
             <div className="change-card-grid">
                 <div className="change-column">
                     <span className="change-column-label">Before</span>
@@ -26,6 +38,13 @@ function ChangeCard({ sectionKey, change, onStatusChange, saving }) {
             <p className="change-reason">{change.reason}</p>
 
             <div className="change-actions">
+                <button
+                    type="button"
+                    className="change-action secondary"
+                    onClick={onSelect}
+                >
+                    View in CV
+                </button>
                 <button
                     type="button"
                     className={`change-action ${change.status === 'accepted' ? 'selected accepted' : ''}`}
@@ -52,6 +71,8 @@ export default function TailoredCVPage() {
     const navigate = useNavigate();
     const [tailoredCVs, setTailoredCVs] = useState([]);
     const [selectedCV, setSelectedCV] = useState(null);
+    const [activeSection, setActiveSection] = useState('skills');
+    const [activeChangeId, setActiveChangeId] = useState('');
     const [loadingList, setLoadingList] = useState(true);
     const [loadingDetail, setLoadingDetail] = useState(false);
     const [savingChangeId, setSavingChangeId] = useState('');
@@ -94,6 +115,9 @@ export default function TailoredCVPage() {
                 }
                 const data = await res.json();
                 setSelectedCV(data);
+                const firstSection = SECTIONS.find((section) => (data.change_set?.[section.key] || []).length > 0);
+                setActiveSection(firstSection?.key || 'skills');
+                setActiveChangeId(firstSection ? data.change_set[firstSection.key][0]?.id || '' : '');
                 setTailoredCVs((prev) => prev.map((item) => (item.id === data.id ? data : item)));
             } catch {
                 setError('Could not connect to the server.');
@@ -109,6 +133,8 @@ export default function TailoredCVPage() {
         () => selectedCV?.review_summary || { pending: 0, accepted: 0, rejected: 0, total: 0 },
         [selectedCV]
     );
+    const previewSections = useMemo(() => buildPreviewSections(selectedCV), [selectedCV]);
+    const activeChanges = selectedCV?.change_set?.[activeSection] || [];
 
     async function handleStatusChange(section, changeId, status) {
         if (!selectedCV) {
@@ -135,6 +161,7 @@ export default function TailoredCVPage() {
 
             const updated = await res.json();
             setSelectedCV(updated);
+            setActiveChangeId(changeId);
             setTailoredCVs((prev) => prev.map((item) => (item.id === updated.id ? updated : item)));
         } catch {
             setError('Could not connect to the server.');
@@ -180,97 +207,132 @@ export default function TailoredCVPage() {
             )}
 
             {tailoredCVs.length > 0 && (
-                <div className="tailored-layout">
-                    <aside className="tailored-list">
-                        {tailoredCVs.map((tcv) => {
-                            const isSelected = Number(id) === tcv.id;
-                            const summary = tcv.review_summary || {};
+                !id ? (
+                    <div className="tailored-list-page">
+                        <div className="tailored-list">
+                            {tailoredCVs.map((tcv) => {
+                                const summary = tcv.review_summary || {};
 
-                            return (
-                                <button
-                                    key={tcv.id}
-                                    type="button"
-                                    className={`tailored-card ${isSelected ? 'selected' : ''}`}
-                                    onClick={() => navigate(`/tailored-cvs/${tcv.id}`)}
-                                >
-                                    <div className="tailored-card-title">
-                                        <h3>{tcv.job_title}</h3>
-                                        {tcv.job_company && <span className="tailored-company">{tcv.job_company}</span>}
-                                    </div>
-                                    <div className="tailored-card-meta">
-                                        <span className="tailored-date">
-                                            {new Date(tcv.created_at).toLocaleDateString()}
-                                        </span>
-                                        <span className="tailored-count">
-                                            {summary.pending || 0} pending
-                                        </span>
-                                    </div>
-                                </button>
-                            );
-                        })}
-                    </aside>
-
-                    <section className="tailored-detail">
-                        {!id && (
-                            <div className="empty-review-state">
-                                <h2>Select a tailored CV</h2>
-                                <p>Choose a job-specific version on the left to compare the original and tailored sections.</p>
-                            </div>
-                        )}
-
-                        {id && loadingDetail && (
+                                return (
+                                    <button
+                                        key={tcv.id}
+                                        type="button"
+                                        className="tailored-card"
+                                        onClick={() => navigate(`/tailored-cvs/${tcv.id}`)}
+                                    >
+                                        <div className="tailored-card-title">
+                                            <h3>{tcv.job_title}</h3>
+                                            {tcv.job_company && <span className="tailored-company">{tcv.job_company}</span>}
+                                        </div>
+                                        <div className="tailored-card-meta">
+                                            <span className="tailored-date">
+                                                {new Date(tcv.created_at).toLocaleDateString()}
+                                            </span>
+                                            <span className="tailored-count">
+                                                {summary.pending || 0} pending
+                                            </span>
+                                        </div>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+                ) : (
+                    <section className="tailored-review-page">
+                        {loadingDetail && (
                             <div className="loading-state detail-loading">
                                 <div className="spinner" />
                                 <p>Loading review details…</p>
                             </div>
                         )}
 
-                        {id && selectedCV && !loadingDetail && (
-                            <>
-                                <div className="detail-header">
-                                    <div>
-                                        <h2>{selectedCV.job_title}</h2>
-                                        {selectedCV.job_company && <p className="detail-company">{selectedCV.job_company}</p>}
+                        {selectedCV && !loadingDetail && (
+                            <div className="review-shell">
+                                <main className="cv-preview-panel">
+                                    <div className="detail-header">
+                                        <div>
+                                            <h2>{selectedCV.job_title}</h2>
+                                            {selectedCV.job_company && <p className="detail-company">{selectedCV.job_company}</p>}
+                                        </div>
+                                        <div className="summary-badges">
+                                            <span className="summary-badge pending">{selectedSummary.pending} pending</span>
+                                            <span className="summary-badge accepted">{selectedSummary.accepted} accepted</span>
+                                            <span className="summary-badge rejected">{selectedSummary.rejected} rejected</span>
+                                        </div>
                                     </div>
-                                    <div className="summary-badges">
-                                        <span className="summary-badge pending">{selectedSummary.pending} pending</span>
-                                        <span className="summary-badge accepted">{selectedSummary.accepted} accepted</span>
-                                        <span className="summary-badge rejected">{selectedSummary.rejected} rejected</span>
-                                    </div>
-                                </div>
 
-                                {SECTIONS.map((section) => {
-                                    const changes = selectedCV.change_set?.[section.key] || [];
-
-                                    return (
-                                        <div key={section.key} className="review-section">
-                                            <div className="review-section-header">
+                                    <div className="cv-preview-document">
+                                        {previewSections.map((section) => (
+                                            <section key={section.key} className="cv-preview-section">
                                                 <h3>{section.label}</h3>
-                                                <span>{changes.length} changes</span>
-                                            </div>
-
-                                            {changes.length === 0 ? (
-                                                <div className="section-empty">No tailored changes for this section.</div>
-                                            ) : (
-                                                <div className="change-list">
-                                                    {changes.map((change) => (
-                                                        <ChangeCard
-                                                            key={change.id}
-                                                            sectionKey={section.key}
-                                                            change={change}
-                                                            saving={savingChangeId === change.id}
-                                                            onStatusChange={handleStatusChange}
-                                                        />
+                                                <div className="cv-preview-text">
+                                                    {section.items.map((item, index) => (
+                                                        <p
+                                                            key={`${section.key}-${index}`}
+                                                            className={activeChangeId === `${section.key}-${index}` ? 'highlighted' : ''}
+                                                        >
+                                                            {item}
+                                                        </p>
                                                     ))}
                                                 </div>
-                                            )}
+                                            </section>
+                                        ))}
+                                    </div>
+                                </main>
+
+                                <aside className="review-sidebar">
+                                    <div className="review-sidebar-section">
+                                        <h3>Sections</h3>
+                                        <div className="section-menu">
+                                            {SECTIONS.map((section) => {
+                                                const count = selectedCV.change_set?.[section.key]?.length || 0;
+                                                return (
+                                                    <button
+                                                        key={section.key}
+                                                        type="button"
+                                                        className={`section-menu-btn ${activeSection === section.key ? 'active' : ''}`}
+                                                        onClick={() => {
+                                                            setActiveSection(section.key);
+                                                            setActiveChangeId(selectedCV.change_set?.[section.key]?.[0]?.id || '');
+                                                        }}
+                                                    >
+                                                        <span>{section.label}</span>
+                                                        <span>{count}</span>
+                                                    </button>
+                                                );
+                                            })}
                                         </div>
-                                    );
-                                })}
-                            </>
+                                    </div>
+
+                                    <div className="review-sidebar-section">
+                                        <div className="review-section-header">
+                                            <h3>{SECTIONS.find((section) => section.key === activeSection)?.label || 'Changes'}</h3>
+                                            <span>{activeChanges.length} changes</span>
+                                        </div>
+
+                                        {activeChanges.length === 0 ? (
+                                            <div className="section-empty">No tailored changes for this section.</div>
+                                        ) : (
+                                            <div className="change-list">
+                                                {activeChanges.map((change) => (
+                                                    <ChangeCard
+                                                        key={change.id}
+                                                        sectionKey={activeSection}
+                                                        change={change}
+                                                        saving={savingChangeId === change.id}
+                                                        selected={activeChangeId === change.id}
+                                                        onSelect={() => setActiveChangeId(change.id)}
+                                                        onStatusChange={handleStatusChange}
+                                                    />
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                </aside>
+                            </div>
                         )}
                     </section>
-                </div>
+                )
             )}
         </div>
     );
