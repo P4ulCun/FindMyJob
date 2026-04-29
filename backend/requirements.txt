@@ -6,3 +6,4 @@ djangorestframework
 djangorestframework-simplejwt
 pdfplumber
 requests>=2.31
+python-docx>=1.1

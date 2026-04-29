@@ -59,7 +59,9 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ---------- Error / empty ---------- */
@@ -185,9 +187,14 @@
   border-radius: 20px;
 }
 
-/* ---------- View job link ---------- */
+/* ---------- Card actions ---------- */
+.job-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
 .view-job-btn {
-  align-self: flex-start;
   font-size: 0.875rem;
   font-weight: 600;
   color: #646cff;
@@ -197,6 +204,88 @@
 
 .view-job-btn:hover {
   color: #535bf2;
+}
+
+.tailor-btn {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.4rem 0.85rem;
+  border: none;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+}
+
+.tailor-btn:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.tailor-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.cover-letter-btn {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.4rem 0.85rem;
+  border: none;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #0d9488, #0891b2);
+  color: #fff;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+}
+
+.cover-letter-btn:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.cover-letter-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---------- Tailor result ---------- */
+.tailor-result {
+  font-size: 0.82rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+}
+
+.tailor-success {
+  background: #ecfdf3;
+  color: #027a48;
+  border: 1px solid #a6f4c5;
+}
+
+.tailor-success a {
+  color: #027a48;
+  font-weight: 600;
+  text-decoration: underline;
+  margin-left: 0.25rem;
+}
+
+.inline-link-btn {
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 0.25rem;
+}
+
+.tailor-error {
+  background: #fef3f2;
+  color: #b42318;
+  border: 1px solid #fda29b;
 }
 
 /* ---------- Responsive ---------- */
@@ -212,5 +301,11 @@
 
   .job-card {
     padding: 1rem;
+  }
+
+  .job-card-actions {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
   }
 }

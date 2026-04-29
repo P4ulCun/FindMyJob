@@ -1,19 +1,23 @@
-import { NavLink, useNavigate } from 'react-router-dom';
-import './Navbar.css';
+import { NavLink, useNavigate } from 'react-router-dom'
+import { clearCachedSearch } from '../../utils/jobsSearchCache'
+import './Navbar.css'
 
 const links = [
   { to: '/', label: 'Home' },
   { to: '/cv', label: 'Upload CV' },
   { to: '/preferences', label: 'Preferences' },
   { to: '/jobs', label: 'Find Jobs' },
+  { to: '/tailored-cvs', label: 'Tailored CVs' },
+  { to: '/cover-letters', label: 'Cover Letters' },
 ];
 
 export default function Navbar() {
   const navigate = useNavigate();
 
   function handleLogout() {
-    localStorage.removeItem('access_token');
-    navigate('/login');
+    localStorage.removeItem('access_token')
+    clearCachedSearch()
+    navigate('/login')
   }
 
   return (
