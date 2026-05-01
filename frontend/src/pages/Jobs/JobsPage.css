@@ -18,6 +18,7 @@
 .search-btn {
   width: 100%;
   padding: 0.75rem;
+  min-height: 48px;
   font-size: 1rem;
   font-weight: 600;
   border: none;
@@ -210,6 +211,10 @@
   font-size: 0.8rem;
   font-weight: 600;
   padding: 0.4rem 0.85rem;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: none;
   border-radius: 6px;
   background: linear-gradient(135deg, #6366f1, #8b5cf6);
@@ -232,6 +237,10 @@
   font-size: 0.8rem;
   font-weight: 600;
   padding: 0.4rem 0.85rem;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: none;
   border-radius: 6px;
   background: linear-gradient(135deg, #0d9488, #0891b2);
@@ -288,6 +297,45 @@
   border: 1px solid #fda29b;
 }
 
+/* ---------- Status Select ---------- */
+.status-select {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.4rem 0.85rem;
+  min-height: 44px;
+  border: 1px solid #e4e7ec;
+  border-radius: 6px;
+  background-color: #ffffff;
+  color: #1d2939;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+  margin-left: auto;
+}
+
+.status-select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.status-select.status-applied {
+  background-color: #ecfdf3;
+  color: #027a48;
+  border-color: #a6f4c5;
+}
+
+.status-select.status-saved {
+  background-color: #fffaeb;
+  color: #b54708;
+  border-color: #fbd28d;
+}
+
+.status-select.status-rejected {
+  background-color: #fef3f2;
+  color: #b42318;
+  border-color: #fda29b;
+}
+
 /* ---------- Responsive ---------- */
 @media (max-width: 600px) {
   .jobs-page h1 {
@@ -305,7 +353,17 @@
 
   .job-card-actions {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+  
+  .status-select {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .tailor-btn,
+  .cover-letter-btn {
+    width: 100%;
   }
 }

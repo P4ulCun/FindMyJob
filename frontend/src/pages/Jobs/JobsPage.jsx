@@ -23,7 +23,9 @@ function scoreBg(score) {
   return '#fef3f2'
 }
 
-function JobCard({ job }) {
+function JobCard({ job, onStatusChange }) {
+  const [status, setStatus] = useState(job.status || '')
+  const [updatingStatus, setUpdatingStatus] = useState(false)
   const [tailoring, setTailoring] = useState(false)
   const [tailorResult, setTailorResult] = useState(null)
   const [generating, setGenerating] = useState(false)
@@ -54,6 +56,37 @@ function JobCard({ job }) {
       setTailorResult({ success: false, error: 'Could not connect to server.' })
     } finally {
       setTailoring(false)
+    }
+  }
+
+  async function handleStatusChange(e) {
+    const newStatus = e.target.value
+    if (!newStatus) return
+
+    setUpdatingStatus(true)
+    try {
+      const res = await apiFetch('/api/jobs/interactions/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          job_url: job.url,
+          job_title: job.title || '',
+          job_company: job.company || '',
+          job_location: job.location || '',
+          job_source: job.source || '',
+          status: newStatus,
+        }),
+      })
+      if (res.ok) {
+        setStatus(newStatus)
+        if (onStatusChange) {
+          onStatusChange(job.url, newStatus)
+        }
+      }
+    } catch {
+      // Ignore for now
+    } finally {
+      setUpdatingStatus(false)
     }
   }
 
@@ -146,6 +179,18 @@ function JobCard({ job }) {
         >
           {generating ? 'Generating…' : '📝 Cover Letter'}
         </button>
+
+        <select
+          value={status}
+          onChange={handleStatusChange}
+          disabled={updatingStatus}
+          className={`status-select ${status ? `status-${status}` : ''}`}
+        >
+          <option value="">Track Job...</option>
+          <option value="saved">Saved</option>
+          <option value="applied">Applied</option>
+          <option value="rejected">Rejected</option>
+        </select>
       </div>
 
       {tailorResult && (
@@ -178,6 +223,12 @@ export default function JobsPage() {
   const [error, setError] = useState('')
   const [message, setMessage] = useState(() => initialSearchState().message)
   const [searched, setSearched] = useState(() => initialSearchState().searched)
+
+  function handleJobStatusChange(url, newStatus) {
+    const nextJobs = jobs.map(j => j.url === url ? { ...j, status: newStatus } : j)
+    setJobs(nextJobs)
+    saveCachedSearch({ jobs: nextJobs, message, searched })
+  }
 
   async function handleSearch() {
     setLoading(true)
@@ -242,7 +293,11 @@ export default function JobsPage() {
           <p className="results-count">{jobs.length} jobs found, sorted by match score</p>
           <div className="jobs-list">
             {jobs.map((job, i) => (
-              <JobCard key={`${job.source}-${i}`} job={job} />
+              <JobCard 
+                key={`${job.source}-${i}`} 
+                job={job} 
+                onStatusChange={handleJobStatusChange}
+              />
             ))}
           </div>
         </div>
