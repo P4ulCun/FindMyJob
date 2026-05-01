@@ -17,12 +17,25 @@ from .serializers import JobPreferenceSerializer
 @parser_classes([JSONParser])
 def job_preference_detail(request):
     """Retrieve or update the current user's job preferences."""
-    preference, _created = JobPreference.objects.get_or_create(user=request.user)
-
     if request.method == 'GET':
-        return Response(JobPreferenceSerializer(preference).data)
+        try:
+            preference = request.user.job_preference
+            return Response(JobPreferenceSerializer(preference).data)
+        except JobPreference.DoesNotExist:
+            return Response({
+                'job_title': '',
+                'location': '',
+                'work_type': '',
+                'seniority': '',
+                'source_adzuna': True,
+                'source_remoteok': True,
+                'source_arbeitnow': True,
+                'source_hn': True,
+                'digest_frequency': 'off',
+            })
 
     # PUT / PATCH
+    preference, _created = JobPreference.objects.get_or_create(user=request.user)
     partial = request.method == 'PATCH'
     serializer = JobPreferenceSerializer(preference, data=request.data, partial=partial)
     if serializer.is_valid():
