@@ -5,6 +5,7 @@ import PreferencesPage from './pages/Preferences/PreferencesPage'
 import JobsPage from './pages/Jobs/JobsPage'
 import TailoredCVPage from './pages/TailoredCV/TailoredCVPage'
 import CoverLettersPage from './pages/CoverLetters/CoverLettersPage'
+import ApplicationsPage from './pages/Applications/ApplicationsPage'
 import AuthPage from './pages/Auth/AuthPage'
 import './App.css'
 
@@ -43,6 +44,7 @@ function App() {
                   <Route path="/tailored-cvs" element={<TailoredCVPage />} />
                   <Route path="/tailored-cvs/:id" element={<TailoredCVPage />} />
                   <Route path="/cover-letters" element={<CoverLettersPage />} />
+                  <Route path="/applications" element={<ApplicationsPage />} />
                 </Routes>
               </main>
             </PrivateRoute>

@@ -9,6 +9,7 @@ const links = [
   { to: '/jobs', label: 'Find Jobs' },
   { to: '/tailored-cvs', label: 'Tailored CVs' },
   { to: '/cover-letters', label: 'Cover Letters' },
+  { to: '/applications', label: 'My Applications' },
 ];
 
 export default function Navbar() {
