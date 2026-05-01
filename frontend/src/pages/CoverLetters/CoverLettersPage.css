@@ -160,6 +160,10 @@
     font-size: 0.82rem;
     font-weight: 600;
     padding: 0.45rem 0.9rem;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     border: none;
     border-radius: 6px;
     cursor: pointer;
@@ -217,6 +221,10 @@
     font-size: 0.82rem;
     font-weight: 600;
     padding: 0.45rem 1rem;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     border: none;
     border-radius: 6px;
     background: #0d9488;
@@ -233,6 +241,10 @@
     font-size: 0.82rem;
     font-weight: 600;
     padding: 0.45rem 1rem;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     border: 1px solid #d0d5dd;
     border-radius: 6px;
     background: #fff;

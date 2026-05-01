@@ -113,3 +113,16 @@
 .tj-link:hover {
   text-decoration: underline;
 }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .pipeline-board {
+    flex-direction: column;
+    align-items: stretch;
+    overflow-x: visible;
+  }
+
+  .pipeline-column {
+    min-width: 100%;
+  }
+}
