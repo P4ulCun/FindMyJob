@@ -10,6 +10,7 @@ from users.models import User
 from preferences.models import JobPreference
 from jobs.ai_agent import JobScoringAgent
 from jobs.job_fetcher import fetch_arbeitnow, fetch_adzuna, fetch_hn_hiring, fetch_remoteok
+from jobs.models import JobInteraction
 
 
 class Command(BaseCommand):
@@ -71,8 +72,15 @@ class Command(BaseCommand):
                 self.stdout.write(f"No jobs fetched for user {user.email}.")
                 continue
 
+            applied_urls = set(
+                JobInteraction.objects.filter(user=user, status='applied').values_list('job_url', flat=True)
+            )
+
             results = []
             for job in all_jobs:
+                if job.get('url') in applied_urls:
+                    continue
+
                 scored = agent.score_job(job, cv_data)
                 results.append({
                     **job,
