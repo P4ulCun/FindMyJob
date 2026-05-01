@@ -16,6 +16,12 @@ class JobPreference(models.Model):
         ('senior', 'Senior'),
     ]
 
+    DIGEST_CHOICES = [
+        ('off', 'Off'),
+        ('daily', 'Daily'),
+        ('weekly', 'Weekly'),
+    ]
+
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -41,6 +47,13 @@ class JobPreference(models.Model):
     source_remoteok = models.BooleanField(default=True)
     source_arbeitnow = models.BooleanField(default=True)
     source_hn = models.BooleanField(default=True)
+
+    # Email Digest
+    digest_frequency = models.CharField(
+        max_length=10,
+        choices=DIGEST_CHOICES,
+        default='off',
+    )
 
     SOURCE_FIELDS = [
         'source_adzuna',
