@@ -7,8 +7,16 @@ export function authHeaders(extra = {}) {
 
 export async function apiFetch(url, options = {}) {
   const { headers: extraHeaders, ...rest } = options;
-  return fetch(url, {
+  const response = await fetch(url, {
     ...rest,
     headers: authHeaders(extraHeaders),
   });
+
+  // If the token is invalid/expired, automatically log out
+  if (response.status === 401 && localStorage.getItem(TOKEN_KEY)) {
+    localStorage.removeItem(TOKEN_KEY);
+    window.location.href = '/login';
+  }
+
+  return response;
 }

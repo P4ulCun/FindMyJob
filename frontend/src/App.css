@@ -1,43 +1,24 @@
 /* ---------- Page shell ---------- */
 .page-shell {
   max-width: 100%;
-  flex: 1;
-  padding: 2.5rem 1.5rem 5rem;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
 }
 
 /* ---------- Home ---------- */
 .home-page {
   text-align: center;
-  padding: 6rem 2rem 8rem;
-  max-width: 680px;
-  margin: 0 auto;
+  padding: 4rem 1rem;
 }
 
 .home-page h1 {
-  font-size: 3.75rem;
-  font-weight: 800;
-  letter-spacing: -0.05em;
-  line-height: 1.08;
-  background: linear-gradient(135deg, #1d2939 0%, #646cff 55%, #8b5cf6 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 1.25rem;
+  font-size: 2.4rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #1d2939;
 }
 
 .home-subtitle {
-  font-size: 1.2rem;
+  font-size: 1.05rem;
   color: #667085;
-  max-width: 420px;
-  margin: 0 auto;
-  line-height: 1.75;
-}
-
-@media (max-width: 600px) {
-  .home-page h1 {
-    font-size: 2.5rem;
-  }
-  .home-subtitle {
-    font-size: 1.05rem;
-  }
 }

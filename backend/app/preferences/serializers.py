@@ -16,6 +16,7 @@ class JobPreferenceSerializer(serializers.ModelSerializer):
             'source_remoteok',
             'source_arbeitnow',
             'source_hn',
+            'digest_frequency',
         ]
         read_only_fields = ['id']
 
