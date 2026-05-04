@@ -171,6 +171,20 @@ docker compose exec backend pip install <package-name>
 - A **health check** + wait script ensures Django only starts after PostgreSQL is ready
 - All services use **volume mounts** for a seamless development experience
 
+## Diagrame
+
+### Arhitectura componentelor
+
+![Arhitectura componentelor](diagrame/arhitectura.png)
+
+### Diagrama de context
+
+![Diagrama de context](diagrame/context.png)
+
+### Workflow
+
+![Workflow](diagrame/workflow.png)
+
 ## License
 
 This project is licensed under the MIT License.
