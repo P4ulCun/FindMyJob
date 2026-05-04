@@ -1,47 +1,83 @@
 .cv-page {
-  max-width: 640px;
+  max-width: 660px;
   margin: 0 auto;
+  background: #fff;
+  border-radius: 20px;
+  border: 1px solid rgba(100, 108, 255, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 20px 64px rgba(100, 108, 255, 0.07);
+  padding: 2.5rem 2.75rem;
 }
 
 .cv-page h1 {
-  font-size: 1.8rem;
-  margin-bottom: 1.5rem;
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: #1d2939;
+  margin-bottom: 1.75rem;
+  padding-bottom: 1rem;
+  border-bottom: 1.5px solid #f0f1ff;
+  position: relative;
+}
+
+.cv-page h1::after {
+  content: '';
+  position: absolute;
+  bottom: -1.5px;
+  left: 0;
+  width: 2.75rem;
+  height: 3px;
+  background: linear-gradient(90deg, #646cff, #8b5cf6);
+  border-radius: 2px;
 }
 
 /* ---------- Upload card ---------- */
 .upload-card {
-  border: 2px dashed #d0d5dd;
-  border-radius: 12px;
-  padding: 2rem;
+  border: 2px dashed #c7d2fe;
+  border-radius: 16px;
+  padding: 2.75rem 2rem;
   text-align: center;
-  background: #fafafa;
-  transition: border-color 0.2s;
+  background: linear-gradient(135deg, #fafbff 0%, #f5f7ff 100%);
+  transition: border-color 0.2s, background 0.2s, transform 0.15s;
+  cursor: pointer;
+}
+
+.upload-card:hover {
+  border-color: #818cf8;
+  background: #f0f2ff;
 }
 
 .upload-card.drag-over {
   border-color: #646cff;
-  background: #f0f0ff;
+  background: #eef0ff;
+  transform: scale(1.01);
+  box-shadow: 0 0 0 4px rgba(100, 108, 255, 0.08);
 }
 
 .upload-card p {
-  margin: 0.5rem 0 0;
-  color: #667085;
-  font-size: 0.85rem;
+  margin: 0.6rem 0 0;
+  color: #98a2b3;
+  font-size: 0.84rem;
 }
 
 .file-input-label {
-  display: inline-block;
-  padding: 0.6rem 1.4rem;
-  background: #646cff;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.65rem 1.5rem;
+  background: linear-gradient(135deg, #646cff 0%, #8b5cf6 100%);
   color: #fff;
   border-radius: 8px;
   cursor: pointer;
-  font-weight: 500;
-  transition: background 0.2s;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: opacity 0.15s, transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 2px 8px rgba(100, 108, 255, 0.3);
 }
 
 .file-input-label:hover {
-  background: #535bf2;
+  opacity: 0.92;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(100, 108, 255, 0.4);
 }
 
 .file-input-label input {
@@ -56,15 +92,21 @@
   justify-content: center;
   gap: 0.5rem;
   color: #344054;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
+  background: #f0f2ff;
+  border: 1px solid #c7d2fe;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
 }
 
 .selected-file .file-name {
   font-weight: 600;
+  color: #4338ca;
 }
 
 .selected-file .file-size {
-  color: #667085;
+  color: #818cf8;
+  font-size: 0.82rem;
 }
 
 /* ---------- Error ---------- */
@@ -73,7 +115,7 @@
   padding: 0.75rem 1rem;
   background: #fef3f2;
   border: 1px solid #fda29b;
-  border-radius: 8px;
+  border-radius: 10px;
   color: #b42318;
   font-size: 0.875rem;
 }
@@ -84,7 +126,7 @@
   padding: 0.75rem 1rem;
   background: #ecfdf3;
   border: 1px solid #6ce9a6;
-  border-radius: 8px;
+  border-radius: 10px;
   color: #027a48;
   font-size: 0.875rem;
 }
@@ -95,44 +137,54 @@
 .reupload-btn {
   margin-top: 1.25rem;
   width: 100%;
-  padding: 0.7rem;
-  font-size: 1rem;
+  padding: 0.75rem;
+  min-height: 48px;
+  font-size: 0.95rem;
   font-weight: 600;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   color: #fff;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: opacity 0.15s, transform 0.15s, box-shadow 0.15s;
 }
 
 .upload-btn {
-  background: #646cff;
+  background: linear-gradient(135deg, #646cff 0%, #8b5cf6 100%);
+  box-shadow: 0 2px 8px rgba(100, 108, 255, 0.3);
 }
 
 .upload-btn:hover:not(:disabled) {
-  background: #535bf2;
+  opacity: 0.93;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(100, 108, 255, 0.4);
 }
 
 .save-btn {
-  background: #12b76a;
+  background: linear-gradient(135deg, #12b76a 0%, #059669 100%);
+  box-shadow: 0 2px 8px rgba(18, 183, 106, 0.28);
 }
 
 .save-btn:hover:not(:disabled) {
-  background: #039855;
+  opacity: 0.93;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(18, 183, 106, 0.38);
 }
 
 .reupload-btn {
-  background: #667085;
+  background: #f1f2f4;
+  color: #344054;
 }
 
 .reupload-btn:hover {
-  background: #475467;
+  background: #e4e7ec;
 }
 
 .upload-btn:disabled,
 .save-btn:disabled {
-  opacity: 0.5;
+  opacity: 0.45;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 .btn-row {
@@ -151,10 +203,25 @@
 }
 
 .preview-section h2 {
-  font-size: 1.35rem;
-  margin-bottom: 1rem;
-  border-bottom: 2px solid #646cff;
-  padding-bottom: 0.4rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1d2939;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.preview-section h2::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 1.2em;
+  background: linear-gradient(180deg, #646cff, #8b5cf6);
+  border-radius: 4px;
+  flex-shrink: 0;
 }
 
 .preview-block {
@@ -162,17 +229,18 @@
 }
 
 .preview-block h3 {
-  font-size: 0.95rem;
+  font-size: 0.78rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: #667085;
-  margin-bottom: 0.4rem;
+  letter-spacing: 0.07em;
+  color: #818cf8;
+  margin-bottom: 0.5rem;
 }
 
 .preview-block .value {
   background: #f9fafb;
   border: 1px solid #e4e7ec;
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 0.75rem 1rem;
   font-size: 0.9rem;
   line-height: 1.55;
@@ -187,46 +255,65 @@
 
 .editable-field .edit-hint {
   position: absolute;
-  top: 0.4rem;
-  right: 0.6rem;
-  font-size: 0.7rem;
-  color: #98a2b3;
+  top: 0.45rem;
+  right: 0.75rem;
+  font-size: 0.68rem;
+  color: #c7d2fe;
   pointer-events: none;
+  font-style: italic;
 }
 
 .editable-input {
   width: 100%;
   min-height: 2.6rem;
   background: #fff;
-  border: 1px solid #d0d5dd;
-  border-radius: 8px;
+  border: 1.5px solid #e4e7ec;
+  border-radius: 10px;
   padding: 0.75rem 1rem;
   font-size: 0.9rem;
   font-family: inherit;
   line-height: 1.55;
   color: #1d2939;
   resize: vertical;
-  transition: border-color 0.15s;
+  transition: border-color 0.15s, box-shadow 0.15s;
   box-sizing: border-box;
 }
 
 .editable-input:focus {
   outline: none;
-  border-color: #646cff;
-  box-shadow: 0 0 0 3px rgba(100, 108, 255, 0.15);
+  border-color: #818cf8;
+  box-shadow: 0 0 0 3px rgba(100, 108, 255, 0.12);
 }
 
 /* ---------- Responsive ---------- */
-@media (max-width: 600px) {
+@media (max-width: 700px) {
+  .cv-page {
+    border-radius: 16px;
+    padding: 1.75rem 1.5rem;
+  }
+
   .cv-page h1 {
     font-size: 1.4rem;
   }
 
   .upload-card {
-    padding: 1.25rem;
+    padding: 2rem 1.25rem;
   }
 
   .btn-row {
     flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .btn-row .save-btn,
+  .btn-row .reupload-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .cv-page {
+    border-radius: 12px;
+    padding: 1.5rem 1.25rem;
   }
 }

@@ -1,0 +1,155 @@
+.applications-page {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.applications-page h1 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: #1d2939;
+}
+
+.applications-subtitle {
+  color: #98a2b3;
+  font-size: 0.9rem;
+  margin-top: 0.4rem;
+  margin-bottom: 2rem;
+}
+
+.pipeline-board {
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
+  overflow-x: auto;
+  padding-bottom: 1.5rem;
+}
+
+.pipeline-column {
+  flex: 1;
+  min-width: 300px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 1.5px solid #eaecf0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.col-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.col-title span {
+  color: #c4cdd8;
+  font-size: 0.82rem;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.applied-col .col-title { color: #027a48; }
+.saved-col .col-title { color: #b54708; }
+.rejected-col .col-title { color: #b42318; }
+
+.applied-col {
+  border-top: 3px solid #12b76a;
+}
+
+.saved-col {
+  border-top: 3px solid #f79009;
+}
+
+.rejected-col {
+  border-top: 3px solid #f04438;
+}
+
+.col-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.tracked-job-card {
+  background: #fafbff;
+  border: 1.5px solid #eaecf0;
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+  transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+}
+
+.tracked-job-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(100, 108, 255, 0.09);
+  border-color: #c7d2fe;
+}
+
+.tj-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 0 0 0.4rem 0;
+  color: #1d2939;
+  line-height: 1.35;
+}
+
+.tj-meta {
+  font-size: 0.78rem;
+  color: #98a2b3;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-bottom: 0.85rem;
+}
+
+.tj-company {
+  font-weight: 600;
+  color: #667085;
+}
+
+.tj-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.78rem;
+  border-top: 1px solid #f0f1ff;
+  padding-top: 0.65rem;
+}
+
+.tj-date {
+  color: #c4cdd8;
+}
+
+.tj-link {
+  color: #646cff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.78rem;
+  transition: color 0.15s;
+}
+
+.tj-link:hover {
+  color: #4338ca;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .pipeline-board {
+    flex-direction: column;
+    align-items: stretch;
+    overflow-x: visible;
+  }
+
+  .pipeline-column {
+    min-width: 100%;
+  }
+}
