@@ -1,3 +1,309 @@
+<<<<<<< HEAD
+.cl-page {
+    max-width: 740px;
+    margin: 0 auto;
+}
+
+.cl-page h1 {
+    font-size: 1.7rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    color: #1d2939;
+    margin-bottom: 0.35rem;
+}
+
+.cl-subtitle {
+    color: #98a2b3;
+    font-size: 0.9rem;
+    margin-bottom: 1.75rem;
+}
+
+/* ---------- Loading ---------- */
+.cl-page .loading-state {
+    margin-top: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    color: #98a2b3;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.cl-page .spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid #e4e7ec;
+    border-top-color: #0d9488;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ---------- Error / empty ---------- */
+.cl-page .error-banner {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    background: #fef3f2;
+    border: 1px solid #fda29b;
+    border-radius: 10px;
+    color: #b42318;
+    font-size: 0.875rem;
+}
+
+.cl-page .empty-state {
+    margin-top: 2.5rem;
+    text-align: center;
+    color: #98a2b3;
+    font-size: 0.95rem;
+}
+
+.cl-page .empty-state a {
+    color: #0d9488;
+    font-weight: 700;
+    text-decoration: underline;
+}
+
+/* ---------- List ---------- */
+.cl-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+/* ---------- Card ---------- */
+.cl-card {
+    background: #fff;
+    border: 1.5px solid #e4e7ec;
+    border-radius: 14px;
+    overflow: hidden;
+    transition: box-shadow 0.15s, border-color 0.15s;
+}
+
+.cl-card.expanded {
+    box-shadow: 0 4px 20px rgba(13, 148, 136, 0.08);
+    border-color: #99f6e4;
+}
+
+.cl-card-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.1rem 1.4rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    gap: 1rem;
+    transition: background 0.15s;
+}
+
+.cl-card-header:hover {
+    background: #f9fafb;
+}
+
+.cl-card-title h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #1d2939;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.cl-company {
+    font-size: 0.82rem;
+    color: #98a2b3;
+    margin-top: 0.15rem;
+}
+
+.cl-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-shrink: 0;
+}
+
+.cl-date {
+    font-size: 0.75rem;
+    color: #c4cdd8;
+}
+
+.cl-card .expand-icon {
+    font-size: 0.85rem;
+    color: #c4cdd8;
+    transition: transform 0.2s;
+}
+
+.cl-card .expand-icon.open {
+    transform: rotate(180deg);
+}
+
+/* ---------- Card body ---------- */
+.cl-card-body {
+    padding: 0 1.4rem 1.4rem;
+    border-top: 1px solid #f0f1ff;
+}
+
+.cl-body-text {
+    margin-top: 0.85rem;
+}
+
+.cl-body-text p {
+    font-size: 0.875rem;
+    color: #344054;
+    line-height: 1.75;
+    margin: 0 0 0.5rem;
+}
+
+/* ---------- Actions ---------- */
+.cl-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.1rem;
+}
+
+.cl-edit-btn,
+.cl-download-btn {
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0.45rem 1rem;
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.15s, box-shadow 0.15s;
+}
+
+.cl-edit-btn {
+    background: #f0f2ff;
+    color: #4338ca;
+    font-weight: 600;
+}
+
+.cl-edit-btn:hover {
+    background: #e4e7ff;
+}
+
+.cl-download-btn {
+    background: linear-gradient(135deg, #0d9488, #0891b2);
+    color: #fff;
+    box-shadow: 0 1px 6px rgba(13, 148, 136, 0.28);
+}
+
+.cl-download-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(13, 148, 136, 0.38);
+}
+
+/* ---------- Editing ---------- */
+.cl-edit-textarea {
+    width: 100%;
+    min-height: 200px;
+    margin-top: 0.85rem;
+    padding: 0.85rem 1rem;
+    font-size: 0.875rem;
+    font-family: inherit;
+    line-height: 1.75;
+    color: #344054;
+    border: 1.5px solid #e4e7ec;
+    border-radius: 10px;
+    resize: vertical;
+    box-sizing: border-box;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.cl-edit-textarea:focus {
+    outline: none;
+    border-color: #0d9488;
+    box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
+}
+
+.cl-edit-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.85rem;
+}
+
+.cl-save-btn {
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0.45rem 1.1rem;
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 8px;
+    background: #0d9488;
+    color: #fff;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.15s;
+}
+
+.cl-save-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.cl-cancel-btn {
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.45rem 1.1rem;
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid #e4e7ec;
+    border-radius: 8px;
+    background: #fff;
+    color: #344054;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.cl-cancel-btn:hover {
+    background: #f9fafb;
+    border-color: #c4cdd8;
+}
+
+.cl-save-msg {
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    color: #027a48;
+    font-weight: 600;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 600px) {
+    .cl-page h1 {
+        font-size: 1.4rem;
+    }
+
+    .cl-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.4rem;
+    }
+
+    .cl-card-meta {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .cl-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
+=======
 .cl-page {
     max-width: 720px;
     margin: 0 auto;
@@ -284,3 +590,4 @@
         gap: 0.5rem;
     }
 }
+>>>>>>> origin/main
