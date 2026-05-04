@@ -16,6 +16,12 @@ const SENIORITY_LEVELS = [
   { value: 'senior', label: 'Senior' },
 ];
 
+const DIGEST_FREQUENCIES = [
+  { value: 'off', label: 'Off' },
+  { value: 'daily', label: 'Daily' },
+  { value: 'weekly', label: 'Weekly' },
+];
+
 const SOURCES = [
   { key: 'source_adzuna', label: 'Adzuna' },
   { key: 'source_remoteok', label: 'RemoteOK' },
@@ -32,6 +38,7 @@ const INITIAL = {
   source_remoteok: true,
   source_arbeitnow: true,
   source_hn: true,
+  digest_frequency: 'off',
 };
 
 export default function PreferencesPage() {
@@ -62,6 +69,7 @@ export default function PreferencesPage() {
           source_remoteok: data.source_remoteok ?? true,
           source_arbeitnow: data.source_arbeitnow ?? true,
           source_hn: data.source_hn ?? true,
+          digest_frequency: data.digest_frequency ?? 'off',
         });
       } catch {
         setError('Network error — could not reach the server.');
@@ -194,6 +202,28 @@ export default function PreferencesPage() {
                   onChange={() => update('seniority', s.value)}
                 />
                 <span>{s.label}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        {/* Digest Frequency */}
+        <fieldset className="pref-fieldset">
+          <legend>Email Digest</legend>
+          <div className="pref-radio-group">
+            {DIGEST_FREQUENCIES.map((df) => (
+              <label
+                key={df.value}
+                className={`pref-radio-card${form.digest_frequency === df.value ? ' selected' : ''}`}
+              >
+                <input
+                  type="radio"
+                  name="digest_frequency"
+                  value={df.value}
+                  checked={form.digest_frequency === df.value}
+                  onChange={() => update('digest_frequency', df.value)}
+                />
+                <span>{df.label}</span>
               </label>
             ))}
           </div>

@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'users',
     'cv',
     'preferences',
+    'jobs',
 ]
 
 MIDDLEWARE = [
@@ -162,3 +163,8 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME':  timedelta(hours=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
 }
+
+# Email
+EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
+DEFAULT_FROM_EMAIL = 'FindMyJob <noreply@findmyjob.local>'
+BASE_API_URL = os.environ.get('BASE_API_URL', 'http://localhost:8000')
