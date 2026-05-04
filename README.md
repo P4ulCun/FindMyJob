@@ -171,13 +171,13 @@ docker compose exec backend pip install <package-name>
 - A **health check** + wait script ensures Django only starts after PostgreSQL is ready
 - All services use **volume mounts** for a seamless development experience
 
-## Diagrame
+## Diagrams
 
-### Arhitectura componentelor
+### Components architecture
 
 ![Arhitectura componentelor](diagrame/arhitectura.png)
 
-### Diagrama de context
+### Context diagram
 
 ![Diagrama de context](diagrame/context.png)
 
