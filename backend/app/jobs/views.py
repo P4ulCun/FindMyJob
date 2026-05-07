@@ -4,7 +4,7 @@ from rest_framework.response import Response
 
 from preferences.models import JobPreference
 from .ai_agent import JobScoringAgent
-from .job_fetcher import fetch_arbeitnow, fetch_adzuna, fetch_hn_hiring, fetch_remoteok
+from .job_fetcher import fetch_arbeitnow, fetch_hn_hiring, fetch_remoteok
 from .models import JobInteraction
 
 
@@ -40,9 +40,6 @@ def search_jobs(request):
         all_jobs.extend(fetch_arbeitnow(job_title, location))
     if prefs.source_hn:
         all_jobs.extend(fetch_hn_hiring(job_title))
-    if prefs.source_adzuna:
-        all_jobs.extend(fetch_adzuna(job_title, location))
-
     if not all_jobs:
         return Response({
             'jobs': [],

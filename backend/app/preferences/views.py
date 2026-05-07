@@ -27,7 +27,6 @@ def job_preference_detail(request):
                 'location': '',
                 'work_type': '',
                 'seniority': '',
-                'source_adzuna': True,
                 'source_remoteok': True,
                 'source_arbeitnow': True,
                 'source_hn': True,

@@ -1,4 +1,3 @@
-import os
 import requests
 
 FETCH_LIMIT = 5
@@ -120,43 +119,6 @@ def fetch_hn_hiring(job_title, limit=FETCH_LIMIT):
             }
             for c in comments
             if c.get('comment_text')
-        ]
-    except Exception:
-        return []
-
-
-def fetch_adzuna(job_title, location='', limit=FETCH_LIMIT):
-    app_id = os.environ.get('ADZUNA_APP_ID', '')
-    app_key = os.environ.get('ADZUNA_APP_KEY', '')
-
-    if not app_id or not app_key:
-        return []
-
-    try:
-        resp = requests.get(
-            'https://api.adzuna.com/v1/api/jobs/gb/search/1',
-            params={
-                'app_id': app_id,
-                'app_key': app_key,
-                'what': job_title,
-                'where': location,
-                'results_per_page': limit,
-            },
-            timeout=10,
-        )
-        jobs = resp.json().get('results', [])
-
-        return [
-            {
-                'title': j.get('title', ''),
-                'company': j.get('company', {}).get('display_name', ''),
-                'location': j.get('location', {}).get('display_name', ''),
-                'description': j.get('description', '')[:600],
-                'url': j.get('redirect_url', ''),
-                'source': 'Adzuna',
-                'tags': [],
-            }
-            for j in jobs
         ]
     except Exception:
         return []

@@ -1,5 +1,6 @@
 import json
 import os
+import re
 
 import requests
 
@@ -40,7 +41,7 @@ Reply ONLY with a valid JSON object, no markdown, no extra text:
                     'model': self.model,
                     'messages': [{'role': 'user', 'content': prompt}],
                     'temperature': 0.1,
-                    'max_tokens': 150,
+                    'max_tokens': 300,
                 },
                 timeout=30,
             )
@@ -48,11 +49,19 @@ Reply ONLY with a valid JSON object, no markdown, no extra text:
 
             # Strip markdown code fences if the model added them
             if '```' in content:
-                content = content.split('```')[1]
-                if content.startswith('json'):
-                    content = content[4:]
+                content = content.split('```')[1].lstrip('json').strip()
 
-            return json.loads(content)
+            try:
+                return json.loads(content)
+            except json.JSONDecodeError:
+                score_match = re.search(r'"score"\s*:\s*(\d+)', content)
+                summary_match = re.search(r'"summary"\s*:\s*"(.*?)(?<!\\)"', content, re.DOTALL)
+                if score_match:
+                    return {
+                        'score': int(score_match.group(1)),
+                        'summary': summary_match.group(1).replace('\n', ' ') if summary_match else '',
+                    }
+                raise
         except Exception as e:
             print(f"[JobScoringAgent] error: {e}")
             return {'score': 0, 'summary': f'AI scoring unavailable: {e}'}

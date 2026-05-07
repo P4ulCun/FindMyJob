@@ -8,7 +8,7 @@ const SOURCE_COLORS = {
   RemoteOK: '#12b76a',
   Arbeitnow: '#f79009',
   HN: '#ff6600',
-  Adzuna: '#2e90fa',
+
 }
 
 function scoreColor(score) {

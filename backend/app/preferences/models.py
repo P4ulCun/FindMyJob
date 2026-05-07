@@ -43,7 +43,6 @@ class JobPreference(models.Model):
     )
 
     # Job sources
-    source_adzuna = models.BooleanField(default=True)
     source_remoteok = models.BooleanField(default=True)
     source_arbeitnow = models.BooleanField(default=True)
     source_hn = models.BooleanField(default=True)
@@ -56,7 +55,6 @@ class JobPreference(models.Model):
     )
 
     SOURCE_FIELDS = [
-        'source_adzuna',
         'source_remoteok',
         'source_arbeitnow',
         'source_hn',
