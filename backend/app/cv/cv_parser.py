@@ -3,7 +3,6 @@ import pdfplumber
 
 
 def extract_text_from_pdf(file) -> str:
-    """Return the full raw text extracted from a PDF file-like object."""
     text_pages = []
     with pdfplumber.open(file) as pdf:
         for page in pdf.pages:
@@ -14,38 +13,39 @@ def extract_text_from_pdf(file) -> str:
 
 
 def parse_cv_text(raw_text: str) -> dict:
-    """
-    Naive heuristic parser that pulls structured sections out of raw CV text.
-    Returns a dict with keys: name, skills, experience, education.
-    """
     lines = [l.strip() for l in raw_text.splitlines() if l.strip()]
 
-    # --- name: first non-empty line ---
     name = lines[0] if lines else ''
 
-    # --- section splitter ---
     section_headers = {
-        'skills': re.compile(r'^(skills|competențe|competente|abilities)', re.IGNORECASE),
-        'experience': re.compile(r'^(experience|experiență|experienta|work\s*history|employment)', re.IGNORECASE),
-        'education': re.compile(r'^(education|educație|educatie|studii|formation)', re.IGNORECASE),
+        'skills':      re.compile(r'(technical\s+)?skills|competențe|competente|abilities', re.IGNORECASE),
+        'experience':  re.compile(r'^(work\s+)?(experience|experiență|experienta|history|employment)', re.IGNORECASE),
+        'education':   re.compile(r'^(education|educație|educatie|studii|formation)', re.IGNORECASE),
+        'projects':    re.compile(r'^projects?', re.IGNORECASE),
+        'achievements': re.compile(r'^achievements?|awards?|honors?', re.IGNORECASE),
     }
 
     sections: dict[str, list[str]] = {k: [] for k in section_headers}
     current_section = None
 
     for line in lines[1:]:
+        # Only treat short lines as potential section headers (headers are rarely > 40 chars)
         matched = False
-        for key, pattern in section_headers.items():
-            if pattern.search(line):
-                current_section = key
-                matched = True
-                break
+        if len(line) <= 40:
+            for key, pattern in section_headers.items():
+                if pattern.search(line):
+                    current_section = key
+                    matched = True
+                    break
         if not matched and current_section:
             sections[current_section].append(line)
+
+    # Projects count as experience for job matching purposes
+    combined_experience = sections['experience'] + sections['projects']
 
     return {
         'name': name,
         'skills': sections['skills'],
-        'experience': sections['experience'],
+        'experience': combined_experience,
         'education': sections['education'],
     }
