@@ -22,13 +22,17 @@ def search_jobs(request):
         )
 
     cv = user.cvs.first()
-    cv_data = {}
-    if cv:
-        cv_data = {
-            'skills': cv.extracted_skills or [],
-            'experience': cv.extracted_experience or [],
-            'education': cv.extracted_education or [],
-        }
+    if not cv:
+        return Response(
+            {'error': 'Please upload a CV before searching for jobs.'},
+            status=400,
+        )
+
+    cv_data = {
+        'skills': cv.extracted_skills or [],
+        'experience': cv.extracted_experience or [],
+        'education': cv.extracted_education or [],
+    }
 
     job_title = prefs.job_title
     location = prefs.location
