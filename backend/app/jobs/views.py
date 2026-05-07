@@ -1,3 +1,8 @@
+import hashlib
+import os
+from datetime import timedelta
+
+from django.utils import timezone
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -5,7 +10,15 @@ from rest_framework.response import Response
 from preferences.models import JobPreference
 from .ai_agent import JobScoringAgent
 from .job_fetcher import fetch_arbeitnow, fetch_hn_hiring, fetch_remoteok
-from .models import JobInteraction
+from .models import CachedJobSearch, JobInteraction
+
+CACHE_TTL_HOURS = int(os.environ.get('JOB_CACHE_TTL_HOURS', 6))
+
+
+def _cache_key(job_title: str, location: str, sources: dict) -> str:
+    source_str = '|'.join(f"{k}={v}" for k, v in sorted(sources.items()))
+    raw = f"{job_title.lower().strip()}|{location.lower().strip()}|{source_str}"
+    return hashlib.md5(raw.encode()).hexdigest()
 
 
 @api_view(['POST'])
@@ -36,19 +49,40 @@ def search_jobs(request):
 
     job_title = prefs.job_title
     location = prefs.location
+    sources = {
+        'remoteok': prefs.source_remoteok,
+        'arbeitnow': prefs.source_arbeitnow,
+        'hn': prefs.source_hn,
+    }
+    key = _cache_key(job_title, location, sources)
 
-    all_jobs = []
-    if prefs.source_remoteok:
-        all_jobs.extend(fetch_remoteok(job_title))
-    if prefs.source_arbeitnow:
-        all_jobs.extend(fetch_arbeitnow(job_title, location))
-    if prefs.source_hn:
-        all_jobs.extend(fetch_hn_hiring(job_title))
-    if not all_jobs:
-        return Response({
-            'jobs': [],
-            'message': 'No jobs found. Try adjusting your preferences.',
-        })
+    cached = CachedJobSearch.objects.filter(cache_key=key).first()
+    if cached and cached.is_valid():
+        all_jobs = cached.results
+    else:
+        all_jobs = []
+        if prefs.source_remoteok:
+            all_jobs.extend(fetch_remoteok(job_title))
+        if prefs.source_arbeitnow:
+            all_jobs.extend(fetch_arbeitnow(job_title, location))
+        if prefs.source_hn:
+            all_jobs.extend(fetch_hn_hiring(job_title))
+
+        if not all_jobs:
+            return Response({
+                'jobs': [],
+                'message': 'No jobs found. Try adjusting your preferences.',
+            })
+
+        CachedJobSearch.objects.update_or_create(
+            cache_key=key,
+            defaults={
+                'job_title': job_title,
+                'location': location,
+                'results': all_jobs,
+                'expires_at': timezone.now() + timedelta(hours=CACHE_TTL_HOURS),
+            },
+        )
 
     agent = JobScoringAgent()
 
