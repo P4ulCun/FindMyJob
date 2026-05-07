@@ -1,5 +1,24 @@
 from django.conf import settings
 from django.db import models
+from django.utils import timezone
+
+
+class CachedJobSearch(models.Model):
+    cache_key = models.CharField(max_length=32, unique=True)
+    job_title = models.CharField(max_length=255)
+    location = models.CharField(max_length=255, blank=True, default='')
+    results = models.JSONField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+
+    class Meta:
+        db_table = 'cached_job_searches'
+
+    def is_valid(self):
+        return timezone.now() < self.expires_at
+
+    def __str__(self):
+        return f'Cache({self.job_title}, {self.location}) expires {self.expires_at}'
 
 
 class JobInteraction(models.Model):
