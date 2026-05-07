@@ -9,7 +9,7 @@ class CachedJobSearch(models.Model):
     location = models.CharField(max_length=255, blank=True, default='')
     results = models.JSONField()
     created_at = models.DateTimeField(auto_now_add=True)
-    expires_at = models.DateTimeField()
+    expires_at = models.DateTimeField(db_index=True)
 
     class Meta:
         db_table = 'cached_job_searches'

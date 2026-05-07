@@ -17,13 +17,59 @@ body {
   font-size: 16px;
   line-height: 1.55;
   color: #1d2939;
-  background-color: #f1f2fc;
+  background-color: #eef0fb;
   background-image:
-    radial-gradient(ellipse 80% 60% at 10% 20%, rgba(100, 108, 255, 0.07) 0%, transparent 65%),
-    radial-gradient(ellipse 70% 60% at 90% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 65%);
+    /* dot grid */
+    radial-gradient(circle, rgba(100, 108, 255, 0.12) 1px, transparent 1px),
+    /* colour blobs */
+    radial-gradient(ellipse 70% 55% at 15% 15%, rgba(100, 108, 255, 0.13) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 85% 80%, rgba(139, 92, 246, 0.11) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 75% 10%, rgba(56, 189, 248, 0.08) 0%, transparent 65%);
+  background-size: 28px 28px, 100% 100%, 100% 100%, 100% 100%;
   background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* animated blobs rendered behind content */
+#root::before,
+#root::after {
+  content: '';
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.25;
+  pointer-events: none;
+  z-index: 0;
+  animation: drift 18s ease-in-out infinite alternate;
+}
+
+#root::before {
+  width: 520px;
+  height: 520px;
+  background: radial-gradient(circle, #818cf8, #6366f1);
+  top: -120px;
+  left: -120px;
+}
+
+#root::after {
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, #a78bfa, #7c3aed);
+  bottom: -100px;
+  right: -100px;
+  animation-delay: -9s;
+}
+
+@keyframes drift {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(40px, 30px) scale(1.08); }
+  100% { transform: translate(-20px, 50px) scale(0.96); }
+}
+
+#root > * {
+  position: relative;
+  z-index: 1;
 }
 
 #root {
