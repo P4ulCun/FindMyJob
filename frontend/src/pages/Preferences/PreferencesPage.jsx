@@ -23,7 +23,6 @@ const DIGEST_FREQUENCIES = [
 ];
 
 const SOURCES = [
-  { key: 'source_adzuna', label: 'Adzuna' },
   { key: 'source_remoteok', label: 'RemoteOK' },
   { key: 'source_arbeitnow', label: 'Arbeitnow' },
   { key: 'source_hn', label: "HN Who's Hiring" },
@@ -34,7 +33,6 @@ const INITIAL = {
   location: '',
   work_type: '',
   seniority: '',
-  source_adzuna: true,
   source_remoteok: true,
   source_arbeitnow: true,
   source_hn: true,
@@ -65,7 +63,6 @@ export default function PreferencesPage() {
           location: data.location ?? '',
           work_type: data.work_type ?? '',
           seniority: data.seniority ?? '',
-          source_adzuna: data.source_adzuna ?? true,
           source_remoteok: data.source_remoteok ?? true,
           source_arbeitnow: data.source_arbeitnow ?? true,
           source_hn: data.source_hn ?? true,

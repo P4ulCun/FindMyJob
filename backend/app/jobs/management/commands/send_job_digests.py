@@ -9,7 +9,7 @@ from django.core.signing import Signer
 from users.models import User
 from preferences.models import JobPreference
 from jobs.ai_agent import JobScoringAgent
-from jobs.job_fetcher import fetch_arbeitnow, fetch_adzuna, fetch_hn_hiring, fetch_remoteok
+from jobs.job_fetcher import fetch_arbeitnow, fetch_hn_hiring, fetch_remoteok
 from jobs.models import JobInteraction
 
 
@@ -65,9 +65,6 @@ class Command(BaseCommand):
                 all_jobs.extend(fetch_arbeitnow(job_title, location))
             if prefs.source_hn:
                 all_jobs.extend(fetch_hn_hiring(job_title))
-            if prefs.source_adzuna:
-                all_jobs.extend(fetch_adzuna(job_title, location))
-
             if not all_jobs:
                 self.stdout.write(f"No jobs fetched for user {user.email}.")
                 continue
