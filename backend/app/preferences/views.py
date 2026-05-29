@@ -56,6 +56,6 @@ def unsubscribe_digest(request, token):
     preference.digest_frequency = 'off'
     preference.save()
     return HttpResponse(
-    '<h2>Unsubscribed Successfully</h2>'
-    '<p>You have been unsubscribed from the job digest emails.</p>'
-)
+        '<h2>Unsubscribed Successfully</h2>'
+        '<p>You have been unsubscribed from the job digest emails.</p>'
+    )

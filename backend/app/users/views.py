@@ -49,8 +49,8 @@ def login(request):
 
     return Response({
         "user": UserSerializer(user).data,
-         "tokens": _tokens_for_user(user)
-        })
+        "tokens": _tokens_for_user(user)
+    })
 
 
 @api_view(["POST"])
