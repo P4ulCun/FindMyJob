@@ -5,7 +5,6 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 
-from .models import User
 from .serializers import UserSerializer, RegisterSerializer
 
 
@@ -48,7 +47,10 @@ def login(request):
             status=status.HTTP_401_UNAUTHORIZED,
         )
 
-    return Response({"user": UserSerializer(user).data, "tokens": _tokens_for_user(user)})
+    return Response({
+        "user": UserSerializer(user).data,
+         "tokens": _tokens_for_user(user)
+        })
 
 
 @api_view(["POST"])

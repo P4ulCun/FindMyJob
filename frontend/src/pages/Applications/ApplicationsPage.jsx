@@ -17,7 +17,7 @@ export default function ApplicationsPage() {
         }
         const data = await res.json()
         setInteractions(data.interactions || [])
-      } catch (err) {
+      } catch {
         setError('Could not connect to the server.')
       } finally {
         setLoading(false)

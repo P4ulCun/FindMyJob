@@ -1,4 +1,6 @@
-[flake8]
 max-line-length = 120
-exclude = migrations,__pycache__,.venv,manage.py
+exclude = migrations,__pycache__,.venv,manage.py,.pytest_cache
 extend-ignore = E203,W503
+per-file-ignores =
+    *cover_letter_agent.py:E501
+    *cv_tailor_agent.py:E501

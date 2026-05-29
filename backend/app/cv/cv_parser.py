@@ -13,7 +13,7 @@ def extract_text_from_pdf(file) -> str:
 
 
 def parse_cv_text(raw_text: str) -> dict:
-    lines = [l.strip() for l in raw_text.splitlines() if l.strip()]
+    lines = [line.strip() for line in raw_text.splitlines() if line.strip()]
 
     name = lines[0] if lines else ''
 
