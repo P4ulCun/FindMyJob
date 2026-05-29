@@ -100,7 +100,6 @@ export default function TailoredCVPage() {
 
     useEffect(() => {
         if (!id) {
-            setSelectedCV(null);
             return;
         }
 
@@ -125,7 +124,6 @@ export default function TailoredCVPage() {
                 setLoadingDetail(false);
             }
         }
-
         fetchTailoredCVDetail();
     }, [id]);
 
