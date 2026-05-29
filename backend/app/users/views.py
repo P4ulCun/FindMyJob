@@ -48,7 +48,7 @@ def login(request):
         )
 
     return Response({
-        "user": UserSerializer(user).data, 
+        "user": UserSerializer(user).data,
          "tokens": _tokens_for_user(user)
         })
 

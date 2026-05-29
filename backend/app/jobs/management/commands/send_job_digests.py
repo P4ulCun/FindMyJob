@@ -6,7 +6,6 @@ from django.conf import settings
 from django.core.signing import Signer
 
 from users.models import User
-from preferences.models import JobPreference
 from jobs.ai_agent import JobScoringAgent
 from jobs.job_fetcher import fetch_arbeitnow, fetch_hn_hiring, fetch_remoteok
 from jobs.models import JobInteraction
@@ -43,7 +42,7 @@ class Command(BaseCommand):
         count = 0
         for user in users_with_prefs:
             prefs = user.job_preference
-            
+
             # Fetch CV data
             cv = user.cvs.first()
             cv_data = {}

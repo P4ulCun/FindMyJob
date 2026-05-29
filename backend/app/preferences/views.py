@@ -42,6 +42,7 @@ def job_preference_detail(request):
         return Response(serializer.data)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def unsubscribe_digest(request, token):
@@ -50,8 +51,11 @@ def unsubscribe_digest(request, token):
         user_id = signer.unsign(token)
     except BadSignature:
         return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
-        
+
     preference = get_object_or_404(JobPreference, user_id=user_id)
     preference.digest_frequency = 'off'
     preference.save()
-    return HttpResponse('<h2>Unsubscribed Successfully</h2><p>You have been unsubscribed from the job digest emails.</p>')
+    return HttpResponse(
+    '<h2>Unsubscribed Successfully</h2>'
+    '<p>You have been unsubscribed from the job digest emails.</p>'
+)

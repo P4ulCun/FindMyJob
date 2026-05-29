@@ -113,4 +113,3 @@ class CoverLetterSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ['id', 'original_cv', 'job_title', 'job_company',
                             'job_description', 'created_at']
-
