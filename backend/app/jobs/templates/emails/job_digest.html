@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; color: #333; }
+        .job-card { border: 1px solid #ddd; padding: 15px; margin-bottom: 20px; border-radius: 8px; }
+        .job-title { margin: 0 0 5px 0; color: #2c3e50; }
+        .job-company { color: #7f8c8d; font-weight: bold; }
+        .job-score { display: inline-block; padding: 3px 8px; background-color: #27ae60; color: white; border-radius: 4px; font-weight: bold; margin-bottom: 10px; }
+        .job-summary { margin-bottom: 15px; }
+        .btn { display: inline-block; padding: 10px 15px; background-color: #3498db; color: white; text-decoration: none; border-radius: 4px; }
+        .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 0.9em; color: #95a5a6; }
+    </style>
+</head>
+<body>
+    <h2>Your Top Job Matches for Today</h2>
+    <p>Hello {{ user.full_name }},</p>
+    <p>Here are your top {{ jobs|length }} job matches based on your preferences and CV:</p>
+
+    {% for job in jobs %}
+    <div class="job-card">
+        <h3 class="job-title">{{ job.title }}</h3>
+        <div class="job-company">{{ job.company }} &bull; {{ job.location }} &bull; Source: {{ job.source }}</div>
+        <div class="job-score">Match Score: {{ job.score|floatformat:0 }}%</div>
+        <div class="job-summary">{{ job.summary }}</div>
+        <a href="{{ job.url }}" class="btn">View Original Posting</a>
+    </div>
+    {% empty %}
+    <p>No suitable jobs found matching your criteria today. Try broadening your search preferences.</p>
+    {% endfor %}
+
+    <div class="footer">
+        <p>You are receiving this email because you subscribed to the job digest.</p>
+        <p>If you no longer wish to receive these emails, you can <a href="{{ unsubscribe_link }}">unsubscribe here</a>.</p>
+    </div>
+</body>
+</html>

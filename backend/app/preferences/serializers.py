@@ -12,10 +12,10 @@ class JobPreferenceSerializer(serializers.ModelSerializer):
             'location',
             'work_type',
             'seniority',
-            'source_adzuna',
             'source_remoteok',
             'source_arbeitnow',
             'source_hn',
+            'digest_frequency',
         ]
         read_only_fields = ['id']
 

@@ -1,0 +1,369 @@
+.jobs-page {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.jobs-page h1 {
+  font-size: 1.8rem;
+  margin-bottom: 0.4rem;
+}
+
+.jobs-subtitle {
+  color: #667085;
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+}
+
+/* ---------- Search button ---------- */
+.search-btn {
+  width: 100%;
+  padding: 0.75rem;
+  min-height: 48px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  background: #646cff;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.search-btn:hover:not(:disabled) {
+  background: #535bf2;
+}
+
+.search-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---------- Loading ---------- */
+.loading-state {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  color: #667085;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid #e4e7ec;
+  border-top-color: #646cff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- Error / empty ---------- */
+.error-banner {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  background: #fef3f2;
+  border: 1px solid #fda29b;
+  border-radius: 8px;
+  color: #b42318;
+  font-size: 0.875rem;
+}
+
+.empty-state {
+  margin-top: 2rem;
+  text-align: center;
+  color: #667085;
+  font-size: 0.95rem;
+}
+
+/* ---------- Results ---------- */
+.jobs-results {
+  margin-top: 1.5rem;
+}
+
+.results-count {
+  font-size: 0.85rem;
+  color: #667085;
+  margin-bottom: 1rem;
+}
+
+.jobs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* ---------- Job card ---------- */
+.job-card {
+  background: #fff;
+  border: 1px solid #e4e7ec;
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.job-card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.job-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.job-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1d2939;
+  flex: 1;
+}
+
+.score-badge {
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.job-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: #667085;
+}
+
+.meta-sep {
+  color: #d0d5dd;
+}
+
+.source-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #fff;
+  padding: 0.15rem 0.55rem;
+  border-radius: 20px;
+  letter-spacing: 0.02em;
+}
+
+/* ---------- Summary ---------- */
+.job-summary {
+  font-size: 0.875rem;
+  color: #344054;
+  line-height: 1.6;
+  background: #f9fafb;
+  border-left: 3px solid #646cff;
+  padding: 0.6rem 0.75rem;
+  border-radius: 0 6px 6px 0;
+}
+
+/* ---------- Tags ---------- */
+.job-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.job-tag {
+  font-size: 0.75rem;
+  background: #f2f4f7;
+  color: #344054;
+  padding: 0.2rem 0.55rem;
+  border-radius: 20px;
+}
+
+/* ---------- Card actions ---------- */
+.job-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.view-job-btn {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #646cff;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.view-job-btn:hover {
+  color: #535bf2;
+}
+
+.tailor-btn {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.4rem 0.85rem;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+}
+
+.tailor-btn:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.tailor-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.cover-letter-btn {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.4rem 0.85rem;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #0d9488, #0891b2);
+  color: #fff;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+}
+
+.cover-letter-btn:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.cover-letter-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---------- Tailor result ---------- */
+.tailor-result {
+  font-size: 0.82rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+}
+
+.tailor-success {
+  background: #ecfdf3;
+  color: #027a48;
+  border: 1px solid #a6f4c5;
+}
+
+.tailor-success a {
+  color: #027a48;
+  font-weight: 600;
+  text-decoration: underline;
+  margin-left: 0.25rem;
+}
+
+.inline-link-btn {
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 0.25rem;
+}
+
+.tailor-error {
+  background: #fef3f2;
+  color: #b42318;
+  border: 1px solid #fda29b;
+}
+
+/* ---------- Status Select ---------- */
+.status-select {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.4rem 0.85rem;
+  min-height: 44px;
+  border: 1px solid #e4e7ec;
+  border-radius: 6px;
+  background-color: #ffffff;
+  color: #1d2939;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+  margin-left: auto;
+}
+
+.status-select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.status-select.status-applied {
+  background-color: #ecfdf3;
+  color: #027a48;
+  border-color: #a6f4c5;
+}
+
+.status-select.status-saved {
+  background-color: #fffaeb;
+  color: #b54708;
+  border-color: #fbd28d;
+}
+
+.status-select.status-rejected {
+  background-color: #fef3f2;
+  color: #b42318;
+  border-color: #fda29b;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 600px) {
+  .jobs-page h1 {
+    font-size: 1.4rem;
+  }
+
+  .job-title-row {
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .job-card {
+    padding: 1rem;
+  }
+
+  .job-card-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+  
+  .status-select {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .tailor-btn,
+  .cover-letter-btn {
+    width: 100%;
+  }
+}

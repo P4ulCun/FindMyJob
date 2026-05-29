@@ -24,7 +24,7 @@
 * **US-03/04:** Users can upload a PDF CV (up to 5MB). The system automatically extracts name, skills, experience, and education. Users can inline-edit this parsed data before saving.
 
 ### EPIC 3: Job Preferences
-* **US-05/06:** Users set preferences (title, location, remote/hybrid, seniority). Users select which external APIs to query (Adzuna, RemoteOK, etc.).
+* **US-05/06:** Users set preferences (title, location, remote/hybrid, seniority). Users select which external APIs to query (RemoteOK, Arbeitnow, HN Who's Hiring).
 
 ### EPIC 4: Agent 1 — Job Finder Bot
 * **US-07/08/09:** Runs on a schedule, queries APIs, removes duplicates. 
