@@ -5,3 +5,8 @@ django-cors-headers>=4.3
 djangorestframework
 djangorestframework-simplejwt
 pdfplumber
+requests>=2.31
+python-docx>=1.1
+
+gunicorn>=22.0
+whitenoise>=6.6
