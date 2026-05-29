@@ -16,6 +16,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+      target: dev
     command: >
       sh -c "sh /scripts/wait-for-db.sh &&
              python manage.py migrate --noinput &&
@@ -39,6 +40,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      target: dev
     command: npm run dev
     volumes:
       - ./frontend:/app

@@ -1,10 +1,21 @@
-FROM node:20-alpine
-
-# Set working directory
+# ───────────────────────── base (dependențe) ─────────────────────────
+FROM node:20-alpine AS base
 WORKDIR /app
-
-# Install dependencies (package.json is volume-mounted, but we copy for layer caching)
 COPY package.json package-lock.json* ./
-RUN npm install
+RUN npm ci
 
-# App code is volume-mounted, not copied (for HMR)
+# ───────────────────────── dev ─────────────────────────
+# Codul vine prin volume mount; comanda (npm run dev) e în docker-compose.yml
+FROM base AS dev
+
+# ───────────────────────── build ─────────────────────────
+FROM base AS build
+COPY . .
+RUN npm run build          # generează /app/dist
+
+# ───────────────────────── prod (nginx) ─────────────────────────
+FROM nginx:1.27-alpine AS prod
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/dist /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
