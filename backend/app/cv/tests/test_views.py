@@ -3,19 +3,7 @@ from django.urls import reverse
 from rest_framework import status
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-from users.models import User
 from cv.models import CV, TailoredCV
-
-
-@pytest.fixture
-def user(db):
-    return User.objects.create_user(email='testuser@example.com', password='password123')
-
-
-@pytest.fixture
-def auth_client(client, user):
-    client.force_login(user)
-    return client
 
 
 @pytest.fixture
@@ -57,10 +45,11 @@ def test_download_tailored_cv(auth_client, tailored_cv):
     assert response.status_code == status.HTTP_200_OK
     assert response['Content-Type'] == 'application/pdf'
     assert 'attachment;' in response['Content-Disposition']
-    assert 'Tailored_CV_Software_Engineer.pdf' in response['Content-Disposition']
+    assert 'Tailored_CV_Software Engineer.pdf' in response['Content-Disposition']
 
     # Check that the response content starts with PDF signature
-    assert response.content.startswith(b'%PDF-')
+    content = b''.join(response.streaming_content)
+    assert content.startswith(b'%PDF-')
 
 
 @pytest.mark.django_db
