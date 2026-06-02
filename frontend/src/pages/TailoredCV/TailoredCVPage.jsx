@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { apiFetch } from '../../utils/api';
+import { apiFetch, authHeaders } from '../../utils/api';
 import './TailoredCVPage.css';
 
 const SECTIONS = [
@@ -134,6 +134,27 @@ export default function TailoredCVPage() {
     const previewSections = useMemo(() => buildPreviewSections(selectedCV), [selectedCV]);
     const activeChanges = selectedCV?.change_set?.[activeSection] || [];
 
+    async function handleDownload(id, jobTitle) {
+        try {
+            const res = await fetch(`/api/cv/tailored/${id}/download/`, {
+                headers: authHeaders(),
+            });
+            if (!res.ok) return;
+            const blob = await res.blob();
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            const safeTitle = jobTitle.replace(/[^a-zA-Z0-9 _-]/g, '').slice(0, 50);
+            a.href = url;
+            a.download = `Tailored_CV_${safeTitle}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+        } catch {
+            // silently fail
+        }
+    }
+
     async function handleStatusChange(section, changeId, status) {
         if (!selectedCV) {
             return;
@@ -190,9 +211,19 @@ export default function TailoredCVPage() {
                     </p>
                 </div>
                 {id && (
-                    <button type="button" className="back-link-btn" onClick={() => navigate('/tailored-cvs')}>
-                        Back to all tailored CVs
-                    </button>
+                    <div style={{ display: 'flex', gap: '0.75rem' }}>
+                        <button 
+                            type="button" 
+                            className="back-link-btn" 
+                            onClick={() => handleDownload(id, selectedCV?.job_title || 'Tailored_CV')}
+                            disabled={!selectedCV}
+                        >
+                            📥 Download PDF
+                        </button>
+                        <button type="button" className="back-link-btn" onClick={() => navigate('/tailored-cvs')}>
+                            Back to all tailored CVs
+                        </button>
+                    </div>
                 )}
             </div>
 

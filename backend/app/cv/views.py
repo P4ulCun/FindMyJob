@@ -218,6 +218,126 @@ def tailored_cv_detail(request, pk):
     return Response(TailoredCVSerializer(tailored_cv).data)
 
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def download_tailored_cv(request, pk):
+    """Download a tailored CV as a PDF file."""
+    try:
+        tailored_cv = TailoredCV.objects.get(pk=pk, user=request.user)
+    except TailoredCV.DoesNotExist:
+        return Response({'error': 'Tailored CV not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+    try:
+        from reportlab.lib.pagesizes import letter
+        from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, ListFlowable, ListItem
+        from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+        from reportlab.lib.enums import TA_CENTER
+    except ImportError:
+        return Response({'error': 'PDF generation library not available.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    buf = io.BytesIO()
+    doc = SimpleDocTemplate(
+        buf,
+        pagesize=letter,
+        rightMargin=50,
+        leftMargin=50,
+        topMargin=50,
+        bottomMargin=50
+    )
+
+    styles = getSampleStyleSheet()
+    
+    title_style = ParagraphStyle(
+        'CVTitle',
+        parent=styles['Heading1'],
+        alignment=TA_CENTER,
+        spaceAfter=20,
+        fontSize=18
+    )
+    
+    section_heading_style = ParagraphStyle(
+        'SectionHeading',
+        parent=styles['Heading2'],
+        spaceBefore=15,
+        spaceAfter=5,
+        fontSize=14,
+        textColor='#333333'
+    )
+    
+    body_style = styles['Normal']
+    body_style.fontSize = 11
+    body_style.spaceAfter = 6
+    
+    bullet_style = ParagraphStyle(
+        'BulletItem',
+        parent=styles['Normal'],
+        fontSize=11,
+        spaceAfter=4,
+        leftIndent=15
+    )
+
+    story = []
+
+    # Title / Name
+    name = tailored_cv.original_cv.extracted_name if tailored_cv.original_cv.extracted_name else "Tailored CV"
+    story.append(Paragraph(name, title_style))
+    
+    job_target = f"Target Role: {tailored_cv.job_title}"
+    if tailored_cv.job_company:
+        job_target += f" at {tailored_cv.job_company}"
+    story.append(Paragraph(job_target, ParagraphStyle('JobTarget', parent=body_style, alignment=TA_CENTER, textColor='#666666')))
+    story.append(Spacer(1, 15))
+
+    def get_final_items(section_key, tailored_items):
+        changes = tailored_cv.change_set.get(section_key, [])
+        final = []
+        for i, item in enumerate(tailored_items):
+            change_id = f"{section_key}-{i}"
+            change = next((c for c in changes if isinstance(c, dict) and c.get('id') == change_id), None)
+            
+            if change and change.get('status') == 'rejected':
+                final.append(change.get('before', item))
+            else:
+                final.append(item)
+        return final
+
+    # Skills
+    skills = get_final_items('skills', tailored_cv.tailored_skills)
+    if skills:
+        story.append(Paragraph('Skills', section_heading_style))
+        skill_items = [ListItem(Paragraph(skill, bullet_style)) for skill in skills]
+        story.append(ListFlowable(skill_items, bulletType='bullet', start='circle'))
+        story.append(Spacer(1, 10))
+
+    # Experience
+    experience = get_final_items('experience', tailored_cv.tailored_experience)
+    if experience:
+        story.append(Paragraph('Experience', section_heading_style))
+        exp_items = [ListItem(Paragraph(exp, bullet_style)) for exp in experience]
+        story.append(ListFlowable(exp_items, bulletType='bullet', start='circle'))
+        story.append(Spacer(1, 10))
+
+    # Education
+    education = get_final_items('education', tailored_cv.tailored_education)
+    if education:
+        story.append(Paragraph('Education', section_heading_style))
+        edu_items = [ListItem(Paragraph(edu, bullet_style)) for edu in education]
+        story.append(ListFlowable(edu_items, bulletType='bullet', start='circle'))
+        story.append(Spacer(1, 10))
+
+    doc.build(story)
+    buf.seek(0)
+
+    safe_title = ''.join(c for c in tailored_cv.job_title if c.isalnum() or c in ' -_')[:50]
+    filename = f'Tailored_CV_{safe_title}.pdf'
+
+    return FileResponse(
+        buf,
+        as_attachment=True,
+        filename=filename,
+        content_type='application/pdf',
+    )
+
 # ───────────────────────────────────────────────
 #  Cover Letter Generation (Agent 2)
 # ───────────────────────────────────────────────

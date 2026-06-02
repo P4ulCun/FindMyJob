@@ -6,7 +6,7 @@ def extract_text_from_pdf(file) -> str:
     text_pages = []
     with pdfplumber.open(file) as pdf:
         for page in pdf.pages:
-            page_text = page.extract_text()
+            page_text = page.extract_text(x_tolerance=1)
             if page_text:
                 text_pages.append(page_text)
     return '\n'.join(text_pages)
