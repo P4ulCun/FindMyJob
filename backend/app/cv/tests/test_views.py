@@ -9,7 +9,7 @@ from cv.models import CV, TailoredCV
 
 @pytest.fixture
 def user(db):
-    return User.objects.create_user(username='testuser', email='testuser@example.com', password='password123')
+    return User.objects.create_user(email='testuser@example.com', password='password123')
 
 
 @pytest.fixture
