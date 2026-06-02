@@ -9,6 +9,7 @@ urlpatterns = [
     path('tailor/', views.tailor_cv, name='cv-tailor'),
     path('tailored/', views.tailored_cv_list, name='cv-tailored-list'),
     path('tailored/<int:pk>/', views.tailored_cv_detail, name='cv-tailored-detail'),
+    path('tailored/<int:pk>/download/', views.download_tailored_cv, name='cv-tailored-download'),
     path('cover-letter/generate/', views.generate_cover_letter, name='cover-letter-generate'),
     path('cover-letters/', views.cover_letter_list, name='cover-letter-list'),
     path('cover-letters/<int:pk>/', views.cover_letter_detail, name='cover-letter-detail'),
