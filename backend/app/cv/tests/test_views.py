@@ -2,19 +2,21 @@ import pytest
 from django.urls import reverse
 from rest_framework import status
 from django.core.files.uploadedfile import SimpleUploadedFile
-import io
 
 from users.models import User
 from cv.models import CV, TailoredCV
+
 
 @pytest.fixture
 def user(db):
     return User.objects.create_user(username='testuser', password='password123')
 
+
 @pytest.fixture
 def auth_client(client, user):
     client.force_login(user)
     return client
+
 
 @pytest.fixture
 def sample_cv(db, user):
@@ -27,6 +29,7 @@ def sample_cv(db, user):
         extracted_experience=['Dev at X'],
         extracted_education=['BS CS']
     )
+
 
 @pytest.fixture
 def tailored_cv(db, user, sample_cv):
@@ -45,22 +48,24 @@ def tailored_cv(db, user, sample_cv):
         tailored_education=['BS CS']
     )
 
+
 @pytest.mark.django_db
 def test_download_tailored_cv(auth_client, tailored_cv):
     url = reverse('cv-tailored-download', kwargs={'pk': tailored_cv.pk})
     response = auth_client.get(url)
-    
+
     assert response.status_code == status.HTTP_200_OK
     assert response['Content-Type'] == 'application/pdf'
     assert 'attachment;' in response['Content-Disposition']
     assert 'Tailored_CV_Software_Engineer.pdf' in response['Content-Disposition']
-    
+
     # Check that the response content starts with PDF signature
     assert response.content.startswith(b'%PDF-')
+
 
 @pytest.mark.django_db
 def test_download_tailored_cv_not_found(auth_client):
     url = reverse('cv-tailored-download', kwargs={'pk': 9999})
     response = auth_client.get(url)
-    
+
     assert response.status_code == status.HTTP_404_NOT_FOUND

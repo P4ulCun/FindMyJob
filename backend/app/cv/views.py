@@ -233,7 +233,10 @@ def download_tailored_cv(request, pk):
         from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
         from reportlab.lib.enums import TA_CENTER
     except ImportError:
-        return Response({'error': 'PDF generation library not available.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response(
+            {'error': 'PDF generation library not available.'},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
 
     buf = io.BytesIO()
     doc = SimpleDocTemplate(
@@ -246,7 +249,7 @@ def download_tailored_cv(request, pk):
     )
 
     styles = getSampleStyleSheet()
-    
+
     title_style = ParagraphStyle(
         'CVTitle',
         parent=styles['Heading1'],
@@ -254,7 +257,7 @@ def download_tailored_cv(request, pk):
         spaceAfter=20,
         fontSize=18
     )
-    
+
     section_heading_style = ParagraphStyle(
         'SectionHeading',
         parent=styles['Heading2'],
@@ -263,11 +266,11 @@ def download_tailored_cv(request, pk):
         fontSize=14,
         textColor='#333333'
     )
-    
+
     body_style = styles['Normal']
     body_style.fontSize = 11
     body_style.spaceAfter = 6
-    
+
     bullet_style = ParagraphStyle(
         'BulletItem',
         parent=styles['Normal'],
@@ -281,11 +284,18 @@ def download_tailored_cv(request, pk):
     # Title / Name
     name = tailored_cv.original_cv.extracted_name if tailored_cv.original_cv.extracted_name else "Tailored CV"
     story.append(Paragraph(name, title_style))
-    
+
     job_target = f"Target Role: {tailored_cv.job_title}"
     if tailored_cv.job_company:
         job_target += f" at {tailored_cv.job_company}"
-    story.append(Paragraph(job_target, ParagraphStyle('JobTarget', parent=body_style, alignment=TA_CENTER, textColor='#666666')))
+
+    target_style = ParagraphStyle(
+        'JobTarget',
+        parent=body_style,
+        alignment=TA_CENTER,
+        textColor='#666666'
+    )
+    story.append(Paragraph(job_target, target_style))
     story.append(Spacer(1, 15))
 
     def get_final_items(section_key, tailored_items):
@@ -294,7 +304,7 @@ def download_tailored_cv(request, pk):
         for i, item in enumerate(tailored_items):
             change_id = f"{section_key}-{i}"
             change = next((c for c in changes if isinstance(c, dict) and c.get('id') == change_id), None)
-            
+
             if change and change.get('status') == 'rejected':
                 final.append(change.get('before', item))
             else:
@@ -338,9 +348,11 @@ def download_tailored_cv(request, pk):
         content_type='application/pdf',
     )
 
+
 # ───────────────────────────────────────────────
 #  Cover Letter Generation (Agent 2)
 # ───────────────────────────────────────────────
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
