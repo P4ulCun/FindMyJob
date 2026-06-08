@@ -12,70 +12,65 @@ html {
 }
 
 body {
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
     Roboto, 'Helvetica Neue', Arial, sans-serif;
   font-size: 16px;
   line-height: 1.55;
-  color: #1d2939;
-  background-color: #eef0fb;
+  color: #0f172a;
+  background-color: #f8fafc;
   background-image:
-    /* dot grid */
-    radial-gradient(circle, rgba(100, 108, 255, 0.12) 1px, transparent 1px),
-    /* colour blobs */
-    radial-gradient(ellipse 70% 55% at 15% 15%, rgba(100, 108, 255, 0.13) 0%, transparent 70%),
-    radial-gradient(ellipse 60% 50% at 85% 80%, rgba(139, 92, 246, 0.11) 0%, transparent 70%),
-    radial-gradient(ellipse 50% 40% at 75% 10%, rgba(56, 189, 248, 0.08) 0%, transparent 65%);
-  background-size: 28px 28px, 100% 100%, 100% 100%, 100% 100%;
+    radial-gradient(ellipse 90% 60% at 5% 0%,   rgba(99, 102, 241, 0.22) 0%, transparent 65%),
+    radial-gradient(ellipse 75% 55% at 98% 100%, rgba(139, 92, 246, 0.20) 0%, transparent 65%);
   background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-/* animated blobs rendered behind content */
-#root::before,
-#root::after {
-  content: '';
-  position: fixed;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.25;
-  pointer-events: none;
-  z-index: 0;
-  animation: drift 18s ease-in-out infinite alternate;
-}
-
-#root::before {
-  width: 520px;
-  height: 520px;
-  background: radial-gradient(circle, #818cf8, #6366f1);
-  top: -120px;
-  left: -120px;
-}
-
-#root::after {
-  width: 420px;
-  height: 420px;
-  background: radial-gradient(circle, #a78bfa, #7c3aed);
-  bottom: -100px;
-  right: -100px;
-  animation-delay: -9s;
-}
-
-@keyframes drift {
-  0%   { transform: translate(0, 0) scale(1); }
-  50%  { transform: translate(40px, 30px) scale(1.08); }
-  100% { transform: translate(-20px, 50px) scale(0.96); }
-}
-
-#root > * {
-  position: relative;
-  z-index: 1;
 }
 
 #root {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+/* Subtle ambient orbs — low opacity, very slow drift */
+#root::before,
+#root::after {
+  content: '';
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(130px);
+  opacity: 0.35;
+  pointer-events: none;
+  z-index: 0;
+  animation: gentleDrift 32s ease-in-out infinite alternate;
+}
+
+#root::before {
+  width: 660px;
+  height: 500px;
+  background: radial-gradient(ellipse, #818cf8, transparent 70%);
+  top: -180px;
+  left: -140px;
+}
+
+#root::after {
+  width: 580px;
+  height: 420px;
+  background: radial-gradient(ellipse, #a78bfa, transparent 70%);
+  bottom: -120px;
+  right: -120px;
+  animation-delay: -16s;
+}
+
+@keyframes gentleDrift {
+  0%   { transform: translate(0,   0)   scale(1);    }
+  50%  { transform: translate(25px, 18px) scale(1.04); }
+  100% { transform: translate(-12px, 30px) scale(0.97); }
+}
+
+#root > * {
+  position: relative;
+  z-index: 1;
 }
 
 a {

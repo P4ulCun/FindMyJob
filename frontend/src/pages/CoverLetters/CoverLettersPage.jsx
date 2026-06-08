@@ -119,7 +119,7 @@ export default function CoverLettersPage() {
 
             {!error && letters.length === 0 && (
                 <div className="empty-state">
-                    <p>No cover letters yet. Go to <a href="/jobs">Find Jobs</a> and click "📝 Cover Letter" on a listing.</p>
+                    <p>No cover letters yet. Go to <a href="/jobs">Find Jobs</a> and click "Cover Letter" on a listing.</p>
                 </div>
             )}
 
@@ -168,13 +168,13 @@ export default function CoverLettersPage() {
                                             </div>
                                             <div className="cl-actions">
                                                 <button className="cl-edit-btn" onClick={() => startEditing(letter)}>
-                                                    ✏️ Edit
+                                                    Edit
                                                 </button>
                                                 <button
                                                     className="cl-download-btn"
                                                     onClick={() => handleDownload(letter.id, letter.job_title)}
                                                 >
-                                                    📥 Download .docx
+                                                    Download .docx
                                                 </button>
                                             </div>
                                         </>

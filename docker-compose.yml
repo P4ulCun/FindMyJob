@@ -31,6 +31,7 @@ services:
       - DATABASE_HOST=db
       - DATABASE_PORT=5432
       - LM_STUDIO_URL=http://host.docker.internal:1234/v1
+      - JOB_FINDER_MODEL=qwen2.5-coder-1.5b-instruct
     extra_hosts:
       - "host.docker.internal:host-gateway"
     depends_on:

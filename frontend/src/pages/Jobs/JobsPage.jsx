@@ -169,7 +169,7 @@ function JobCard({ job, onStatusChange }) {
           onClick={handleTailor}
           disabled={tailoring}
         >
-          {tailoring ? 'Tailoring…' : '✨ Tailor CV'}
+          {tailoring ? 'Tailoring…' : 'Tailor CV'}
         </button>
 
         <button
@@ -177,7 +177,7 @@ function JobCard({ job, onStatusChange }) {
           onClick={handleGenerateCoverLetter}
           disabled={generating}
         >
-          {generating ? 'Generating…' : '📝 Cover Letter'}
+          {generating ? 'Generating…' : 'Cover Letter'}
         </button>
 
         <select

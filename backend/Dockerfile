@@ -4,11 +4,6 @@ FROM python:3.11-slim AS base
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
-# postgresql-client e necesar pentru pg_isready (wait-for-db.sh)
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends postgresql-client \
-    && rm -rf /var/lib/apt/lists/*
-
 WORKDIR /app
 
 COPY requirements.txt /app/

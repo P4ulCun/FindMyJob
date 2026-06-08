@@ -218,7 +218,7 @@ export default function TailoredCVPage() {
                             onClick={() => handleDownload(id, selectedCV?.job_title || 'Tailored_CV')}
                             disabled={!selectedCV}
                         >
-                            📥 Download PDF
+                            Download PDF
                         </button>
                         <button type="button" className="back-link-btn" onClick={() => navigate('/tailored-cvs')}>
                             Back to all tailored CVs
