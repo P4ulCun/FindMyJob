@@ -100,7 +100,7 @@ def search_jobs(request):
     interaction_map = {i.job_url: i.status for i in interactions}
 
     results = []
-    for job in all_jobs:
+    for job in all_jobs[:10]:
         scored = agent.score_job(job, cv_data)
         job_url = job.get('url', '')
         status = interaction_map.get(job_url)

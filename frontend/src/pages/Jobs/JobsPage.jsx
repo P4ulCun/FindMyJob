@@ -142,8 +142,10 @@ function JobCard({ job, onStatusChange }) {
         </div>
       </div>
 
-      {job.summary && (
-        <p className="job-summary">{job.summary}</p>
+      {job.score > 0 && (
+        <p className="job-summary">
+          {job.summary || 'No AI summary available for this job.'}
+        </p>
       )}
 
       {job.tags && job.tags.length > 0 && (

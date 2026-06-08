@@ -135,9 +135,9 @@ Reply ONLY with a valid JSON object, no markdown, no extra text:
                     'model': self.model,
                     'messages': [{'role': 'user', 'content': prompt}],
                     'temperature': 0.3,
-                    'max_tokens': 1000,
+                    'max_tokens': 600,
                 },
-                timeout=60,
+                timeout=120,
             )
             resp.raise_for_status()
             content = resp.json()['choices'][0]['message']['content'].strip()

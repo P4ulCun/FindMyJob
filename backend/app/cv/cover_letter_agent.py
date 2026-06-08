@@ -27,7 +27,7 @@ class CoverLetterAgent:
 
         job_title = job.get('title', 'the advertised position')
         job_company = job.get('company', 'your company')
-        job_desc = job.get('description', '')[:800]
+        job_desc = job.get('description', '')[:300]
 
         prompt = f"""You are an expert cover letter writer. Write a professional, personalised cover letter for the candidate applying to a specific job.
 
@@ -61,9 +61,9 @@ Write the cover letter as plain text. Do NOT use markdown formatting. Do NOT wra
                     'model': self.model,
                     'messages': [{'role': 'user', 'content': prompt}],
                     'temperature': 0.5,
-                    'max_tokens': 1200,
+                    'max_tokens': 600,
                 },
-                timeout=60,
+                timeout=120,
             )
             content = resp.json()['choices'][0]['message']['content'].strip()
 

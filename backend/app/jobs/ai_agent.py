@@ -29,7 +29,7 @@ Job Listing:
 - Title: {job.get('title', '')}
 - Company: {job.get('company', '')}
 - Location: {job.get('location', '')}
-- Description: {job.get('description', '')[:400]}
+- Description: {job.get('description', '')[:200]}
 
 Reply ONLY with a valid JSON object, no markdown, no extra text:
 {{"score": <integer 0-100>, "summary": "<1-2 sentence explanation of the match>"}}"""
@@ -41,13 +41,12 @@ Reply ONLY with a valid JSON object, no markdown, no extra text:
                     'model': self.model,
                     'messages': [{'role': 'user', 'content': prompt}],
                     'temperature': 0.1,
-                    'max_tokens': 300,
+                    'max_tokens': 250,
                 },
                 timeout=30,
             )
             content = resp.json()['choices'][0]['message']['content'].strip()
 
-            # Strip markdown code fences if the model added them
             if '```' in content:
                 content = content.split('```')[1].lstrip('json').strip()
 
