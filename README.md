@@ -181,9 +181,23 @@ docker compose exec backend pip install <package-name>
 
 ![Diagrama de context](diagrame/context.png)
 
-### Workflow
+### UML class diagram
 
-![Workflow](diagrame/workflow.png)
+![Diagrama UML](diagrame/diagrama_UML.png)
+
+### Agents workflow
+
+Fluxul celor doi agenți AI, împărțit în trei etape:
+
+![Workflow - etapa 1](diagrame/workflow_1.png)
+
+![Workflow - etapa 2](diagrame/workflow_2.png)
+
+![Workflow - etapa 3](diagrame/workflow_3.png)
+
+### CI/CD pipeline
+
+![Pipeline CI/CD](diagrame/pipeline.png)
 
 ## License
 
