@@ -8,7 +8,7 @@ services:
     ports:
       - "5433:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}" ]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -31,7 +31,7 @@ services:
       - DATABASE_HOST=db
       - DATABASE_PORT=5432
       - LM_STUDIO_URL=http://host.docker.internal:1234/v1
-      - JOB_FINDER_MODEL=qwen2.5-1.5b-instruct
+      - JOB_FINDER_MODEL=qwen2.5-coder-1.5b-instruct
       - COVER_LETTER_MODEL=llama-3.2-3b-instruct
       - CV_TAILOR_MODEL=llama-3.2-3b-instruct
     extra_hosts:
