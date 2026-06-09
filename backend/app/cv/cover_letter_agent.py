@@ -54,7 +54,8 @@ class CoverLetterAgent:
                                 f'- Experience: {experience}\n'
                                 f'- Education: {education}\n\n'
                                 f'Job description: {job_desc}\n\n'
-                                f'Highlight the 3 most relevant skills. Address the hiring manager at {job_company}. End with a call to action.'
+                                f'Highlight the 3 most relevant skills. Address the hiring manager at {job_company}. '
+                                f'End with a call to action and sign the letter with the candidate\'s name ({name}).'
                             ),
                         },
                     ],

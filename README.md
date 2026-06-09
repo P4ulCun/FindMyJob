@@ -2,6 +2,9 @@
 
 A full-stack web application built with **React (Vite)**, **Django**, and **PostgreSQL**, fully containerized with Docker Compose for local development.
 
+## Link for demo
+[YouTube](https://www.youtube.com/watch?v=yBv7Qmm4FGE)
+
 ## Tech Stack
 
 | Layer | Technology | Version |
