@@ -3,6 +3,21 @@ import requests
 
 from cv.cover_letter_agent import CoverLetterAgent
 
+CV_REAL = {
+    "name": "Ana Pop",
+    "skills": ["Python", "Django", "REST APIs"],
+    "experience": ["Backend developer la Acme — 3 ani"],
+    "education": ["Licență Informatică, UBB"],
+}
+
+JOB_REAL = {
+    "title": "Python Backend Engineer",
+    "company": "TechCorp",
+    "description": "We build Django-based microservices. Looking for Python and REST API expertise.",
+}
+
+SKILLS_NOT_IN_CV = ["Java", "Kubernetes", "React", "Machine Learning", "C++", "Swift"]
+
 CV_DATA = {
     "name": "Ana Pop",
     "skills": ["Python", "Django", "REST APIs"],
@@ -77,3 +92,35 @@ class TestCoverLetterAgentEvals:
 
         assert "**" not in result
         assert "#" not in result
+
+
+@pytest.mark.llm_eval
+class TestCoverLetterAgentAntiHallucination:
+    def test_nu_inventa_skill_uri_absente_din_cv(self):
+        result = CoverLetterAgent().generate(CV_REAL, JOB_REAL)
+
+        hallucinated = [s for s in SKILLS_NOT_IN_CV if s in result]
+        assert not hallucinated, (
+            f"Hallucination detected: skills not in CV appeared in letter: {hallucinated}"
+        )
+
+    def test_mentioneaza_cel_putin_un_skill_din_cv(self):
+        result = CoverLetterAgent().generate(CV_REAL, JOB_REAL)
+
+        assert any(skill in result for skill in CV_REAL["skills"]), (
+            f"No CV skill found in letter. Skills: {CV_REAL['skills']}"
+        )
+
+    def test_contine_numele_candidatului_si_companiei(self):
+        result = CoverLetterAgent().generate(CV_REAL, JOB_REAL)
+
+        assert CV_REAL["name"] in result, "Candidate name missing from letter"
+        assert JOB_REAL["company"] in result, "Company name missing from letter"
+
+    def test_lungime_rezonabila(self):
+        result = CoverLetterAgent().generate(CV_REAL, JOB_REAL)
+
+        word_count = len(result.split())
+        assert 150 <= word_count <= 500, (
+            f"Letter length out of expected range: {word_count} words"
+        )

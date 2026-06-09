@@ -61,7 +61,7 @@ jobs:
 
       - name: Run tests (pytest)
         working-directory: backend/app
-        run: pytest -ra
+        run: pytest -ra -m "not llm_eval"
 
   # ───────────────────────── CI · FRONTEND ────────────────────────
   frontend-ci:

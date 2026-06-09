@@ -27,11 +27,15 @@ def auth_client(api_client, user):
 
 
 @pytest.fixture(autouse=True)
-def block_external_http(monkeypatch):
+def block_external_http(request, monkeypatch):
     """
     Plasă de siguranță: dacă un test uită să mock-uiască un agent AI sau un
     fetcher de joburi, apelul real eșuează zgomotos în loc să lovească rețeaua.
+    Testele marcate cu @pytest.mark.llm_eval sunt exceptate — ele rulează modelul real.
     """
+    if request.node.get_closest_marker("llm_eval"):
+        return
+
     def _blocked(*args, **kwargs):
         raise RuntimeError(
             "Apel HTTP real blocat în teste. Mock-uiește agentul/fetcher-ul."
