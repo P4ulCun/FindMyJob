@@ -1,6 +1,5 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import PreferencesPage from './PreferencesPage'
-import * as api from '../../utils/api'
 
 vi.mock('../../utils/api', () => ({
   authHeaders: vi.fn(() => ({ Authorization: 'Bearer test' })),
