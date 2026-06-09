@@ -29,37 +29,35 @@ class CoverLetterAgent:
         job_company = job.get('company', 'your company')
         job_desc = job.get('description', '')[:300]
 
-        prompt = f"""You are an expert cover letter writer. Write a professional, personalised cover letter for the candidate applying to a specific job.
-
-RULES:
-1. Address the letter to the hiring manager at {job_company}.
-2. Mention the job title "{job_title}" in the opening paragraph.
-3. Highlight the TOP 3 most relevant skills from the candidate's CV that match the job description.
-4. Reference specific experience from the CV that is relevant.
-5. Keep it concise — 3 to 4 paragraphs, around 250-350 words.
-6. Use a professional but warm tone.
-7. Do NOT fabricate any skills or experience not present in the CV.
-8. End with a polite call to action.
-
-CANDIDATE CV:
-- Name: {name}
-- Skills: {skills}
-- Experience: {experience}
-- Education: {education}
-
-JOB LISTING:
-- Title: {job_title}
-- Company: {job_company}
-- Description: {job_desc}
-
-Write the cover letter as plain text. Do NOT use markdown formatting. Do NOT wrap in code blocks."""
-
         try:
             resp = requests.post(
                 self.api_url,
                 json={
                     'model': self.model,
-                    'messages': [{'role': 'user', 'content': prompt}],
+                    'messages': [
+                        {
+                            'role': 'system',
+                            'content': (
+                                'You are an expert cover letter writer. '
+                                'Write professional, personalised cover letters in plain text. '
+                                'Never use markdown or code blocks. '
+                                '3 to 4 paragraphs, around 250-350 words. '
+                                'Only use skills and experience present in the CV — never fabricate.'
+                            ),
+                        },
+                        {
+                            'role': 'user',
+                            'content': (
+                                f'Write a cover letter for {name} applying to the {job_title} position at {job_company}.\n\n'
+                                f'Candidate CV:\n'
+                                f'- Skills: {skills}\n'
+                                f'- Experience: {experience}\n'
+                                f'- Education: {education}\n\n'
+                                f'Job description: {job_desc}\n\n'
+                                f'Highlight the 3 most relevant skills. Address the hiring manager at {job_company}. End with a call to action.'
+                            ),
+                        },
+                    ],
                     'temperature': 0.5,
                     'max_tokens': 600,
                 },

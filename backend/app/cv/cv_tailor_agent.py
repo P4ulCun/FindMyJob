@@ -100,40 +100,40 @@ class CVTailorAgent:
         }
 
     def tailor(self, cv_data: dict, job: dict) -> dict:
-        skills = ', '.join(cv_data.get('skills', [])) or 'Not specified'
-        experience = '; '.join(cv_data.get('experience', [])) or 'Not specified'
-        education = '; '.join(cv_data.get('education', [])) or 'Not specified'
-
-        prompt = f"""You are an expert CV tailoring assistant. Your job is to rewrite the candidate's CV content so it is optimised for a specific job listing.
-
-RULES:
-1. Rewrite experience bullet points to emphasise keywords and requirements from the job description.
-2. Reorder and rephrase skills to prioritise those most relevant to the job.
-3. Adjust education descriptions only if wording can better match the job.
-4. NEVER invent skills, experience, or qualifications that are not in the original CV.
-5. Keep the same number of items in each list.
-6. For every item, include a short reason that explains why the wording changed.
-7. If an item does not need any change, return it unchanged; the backend will exclude unchanged items from review.
-
-CANDIDATE CV:
-- Skills: {skills}
-- Experience: {experience}
-- Education: {education}
-
-JOB LISTING:
-- Title: {job.get('title', '')}
-- Company: {job.get('company', '')}
-- Description: {job.get('description', '')[:800]}
-
-Reply ONLY with a valid JSON object, no markdown, no extra text:
-{{"skills": [{{"after": "<rewritten item>", "reason": "<short why>"}}], "experience": [{{"after": "<rewritten item>", "reason": "<short why>"}}], "education": [{{"after": "<rewritten item>", "reason": "<short why>"}}]}}"""
+        skills = ', '.join(cv_data.get('skills', [])[:12]) or 'Not specified'
+        experience = '; '.join(cv_data.get('experience', [])[:3]) or 'Not specified'
+        education = '; '.join(cv_data.get('education', [])[:2]) or 'Not specified'
 
         try:
             resp = requests.post(
                 self.api_url,
                 json={
                     'model': self.model,
-                    'messages': [{'role': 'user', 'content': prompt}],
+                    'messages': [
+                        {
+                            'role': 'system',
+                            'content': (
+                                'You are a CV tailoring expert. '
+                                'Rewrite CV items to better match a job description. '
+                                'Never invent skills or experience not present in the original CV. '
+                                'Keep the same number of items in each list. '
+                                'Return ONLY a valid JSON object with keys "skills", "experience", "education". '
+                                'Each key maps to a list of objects with "after" and "reason" fields.'
+                            ),
+                        },
+                        {
+                            'role': 'user',
+                            'content': (
+                                f'Rewrite the CV below to better match the job listing. '
+                                f'Return JSON only.\n\n'
+                                f'CV Skills: {skills}\n'
+                                f'CV Experience: {experience}\n'
+                                f'CV Education: {education}\n\n'
+                                f'Job: {job.get("title", "")} at {job.get("company", "")}\n'
+                                f'Description: {job.get("description", "")[:400]}'
+                            ),
+                        },
+                    ],
                     'temperature': 0.3,
                     'max_tokens': 2000,
                 },
