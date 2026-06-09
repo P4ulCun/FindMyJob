@@ -132,3 +132,33 @@ class TestCVTailorAgentEvals:
         result = CVTailorAgent().tailor(CV_DATA, JOB)
 
         assert len(result["tailored_skills"]) == len(CV_DATA["skills"])
+
+
+CV_REAL = {
+    "name": "Ana Pop",
+    "skills": ["Python", "Django", "REST APIs"],
+    "experience": ["Backend developer la Acme — 3 ani"],
+    "education": ["Licență Informatică, UBB"],
+}
+
+JOB_REAL = {
+    "title": "Python Backend Engineer",
+    "company": "TechCorp",
+    "description": "We build Django-based microservices. Looking for Python and REST API expertise.",
+}
+
+SKILLS_NOT_IN_CV = ["Java", "Kubernetes", "React", "Machine Learning", "C++", "Swift"]
+
+
+@pytest.mark.llm_eval
+class TestCVTailorAgentAntiHallucination:
+    def test_nu_inventa_skill_uri_absente_din_cv(self):
+        result = CVTailorAgent().tailor(CV_REAL, JOB_REAL)
+        tailored_skills_str = " ".join(result["tailored_skills"]).lower()
+        hallucinated = [s for s in SKILLS_NOT_IN_CV if s.lower() in tailored_skills_str]
+        assert not hallucinated, f"Hallucination detected: {hallucinated}"
+
+    def test_pastreaza_numarul_de_elemente(self):
+        result = CVTailorAgent().tailor(CV_REAL, JOB_REAL)
+        assert len(result["tailored_skills"]) == len(CV_REAL["skills"])
+        assert len(result["tailored_experience"]) == len(CV_REAL["experience"])

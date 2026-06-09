@@ -70,3 +70,40 @@ class TestJobScoringAgentEvals:
 
         assert isinstance(result["score"], int)
         assert 0 <= result["score"] <= 100
+
+
+CV_REAL = {
+    "name": "Ana Pop",
+    "skills": ["Python", "Django", "REST APIs", "PostgreSQL"],
+    "experience": ["Backend developer la Acme — 3 ani"],
+    "education": ["Licență Informatică, UBB"],
+}
+
+JOB_PERFECT_MATCH = {
+    "title": "Python Backend Engineer",
+    "company": "TechCorp",
+    "description": "We are looking for a Python developer with Django and PostgreSQL experience. REST APIs are a must.",
+}
+
+JOB_POOR_MATCH = {
+    "title": "Frontend React Developer",
+    "company": "WebUI",
+    "description": "Looking for a React developer with deep CSS and UI/UX knowledge. No backend work.",
+}
+
+
+@pytest.mark.llm_eval
+class TestJobScoringAgentAntiHallucination:
+    def test_scor_mare_pentru_match_perfect(self):
+        result = JobScoringAgent().score_job(JOB_PERFECT_MATCH, CV_REAL)
+        assert isinstance(result["score"], int)
+        assert result["score"] >= 70, f"Expected high score, got {result['score']}"
+
+    def test_scor_mic_pentru_match_slab(self):
+        result = JobScoringAgent().score_job(JOB_POOR_MATCH, CV_REAL)
+        assert isinstance(result["score"], int)
+        assert result["score"] <= 50, f"Expected low score, got {result['score']}"
+
+    def test_summary_fara_markdown(self):
+        result = JobScoringAgent().score_job(JOB_PERFECT_MATCH, CV_REAL)
+        assert "```" not in result["summary"], "Summary should not contain markdown fences"

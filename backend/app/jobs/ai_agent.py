@@ -51,7 +51,17 @@ Reply ONLY with a valid JSON object, no markdown, no extra text:
                 },
                 timeout=30,
             )
-            content = resp.json()['choices'][0]['message']['content'].strip()
+
+            if resp.status_code != 200:
+                print(f"[JobScoringAgent] HTTP Error {resp.status_code}: {resp.text}")
+                resp.raise_for_status()
+
+            data = resp.json()
+            if 'choices' not in data:
+                print(f"[JobScoringAgent] Invalid response from LM Studio: {data}")
+                raise KeyError('choices')
+
+            content = data['choices'][0]['message']['content'].strip()
 
             if '```' in content:
                 content = content.split('```')[1].lstrip('json').strip()
