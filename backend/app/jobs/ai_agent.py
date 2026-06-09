@@ -18,7 +18,7 @@ class JobScoringAgent:
         experience = '; '.join(cv_data.get('experience', [])) or 'Not specified'
         education = '; '.join(cv_data.get('education', [])) or 'Not specified'
 
-        prompt = f"""You are a job matching assistant. Rate how well the candidate matches the job listing.
+        prompt = f"""You are a strict job matching assistant. Rate how well the candidate matches the job listing.
 
 Candidate CV:
 - Skills: {skills}
@@ -29,7 +29,13 @@ Job Listing:
 - Title: {job.get('title', '')}
 - Company: {job.get('company', '')}
 - Location: {job.get('location', '')}
-- Description: {job.get('description', '')[:200]}
+- Description: {job.get('description', '')[:500]}
+
+Scoring criteria (be strict and realistic):
+- 80-100: Strong match — candidate has most required skills and relevant experience for this exact role
+- 50-79: Partial match — candidate meets some requirements but is missing key skills or experience
+- 20-49: Weak match — candidate has transferable skills but significant gaps exist
+- 0-19: Poor match — candidate profile does not align with the job requirements
 
 Reply ONLY with a valid JSON object, no markdown, no extra text:
 {{"score": <integer 0-100>, "summary": "<1-2 sentence explanation of the match>"}}"""

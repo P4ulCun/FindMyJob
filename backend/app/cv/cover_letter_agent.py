@@ -21,9 +21,9 @@ class CoverLetterAgent:
 
     def generate(self, cv_data: dict, job: dict) -> str:
         name = cv_data.get('name', 'the candidate')
-        skills = ', '.join(cv_data.get('skills', [])) or 'Not specified'
-        experience = '; '.join(cv_data.get('experience', [])) or 'Not specified'
-        education = '; '.join(cv_data.get('education', [])) or 'Not specified'
+        skills = ', '.join(cv_data.get('skills', [])[:12]) or 'Not specified'
+        experience = '; '.join(cv_data.get('experience', [])[:3]) or 'Not specified'
+        education = '; '.join(cv_data.get('education', [])[:2]) or 'Not specified'
 
         job_title = job.get('title', 'the advertised position')
         job_company = job.get('company', 'your company')

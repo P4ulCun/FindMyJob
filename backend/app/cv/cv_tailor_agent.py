@@ -135,7 +135,7 @@ Reply ONLY with a valid JSON object, no markdown, no extra text:
                     'model': self.model,
                     'messages': [{'role': 'user', 'content': prompt}],
                     'temperature': 0.3,
-                    'max_tokens': 600,
+                    'max_tokens': 2000,
                 },
                 timeout=120,
             )

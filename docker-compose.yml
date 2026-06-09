@@ -32,6 +32,8 @@ services:
       - DATABASE_PORT=5432
       - LM_STUDIO_URL=http://host.docker.internal:1234/v1
       - JOB_FINDER_MODEL=qwen2.5-coder-1.5b-instruct
+      - COVER_LETTER_MODEL=llama-3.2-3b-instruct
+      - CV_TAILOR_MODEL=llama-3.2-3b-instruct
     extra_hosts:
       - "host.docker.internal:host-gateway"
     depends_on:
