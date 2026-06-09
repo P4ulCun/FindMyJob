@@ -16,6 +16,9 @@ RUN chmod +x /scripts/wait-for-db.sh
 # Codul vine prin volume mount; comanda (runserver) e în docker-compose.yml
 FROM base AS dev
 
+COPY requirements-dev.txt /app/
+RUN pip install --no-cache-dir -r requirements-dev.txt
+
 # ───────────────────────── prod ─────────────────────────
 FROM base AS prod
 
